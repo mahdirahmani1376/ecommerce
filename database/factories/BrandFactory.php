@@ -17,9 +17,10 @@ class BrandFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->name;
         return [
-            'brand_name' => $name,
-            'brand_slug' => Str::slug($name),
+            'name' => $name,
+            'slug' => Str::slug($name),
         ];
     }
 }

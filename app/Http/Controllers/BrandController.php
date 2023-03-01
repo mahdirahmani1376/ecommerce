@@ -10,28 +10,36 @@ use Intervention\Image\Facades\Image;
 
 class BrandController extends Controller
 {
-    public function AllBrand()
+    public function index()
     {
         $brands = Brand::latest()->get();
         return view('backend.brand.brand_all',compact('brands'));
     }
 
-    public function AddBrand()
+    public function show()
     {
         return view('backend.brand.brand_add');
     }
 
-    public function StoreBrand(Request $request)
+    public function store(Request $request)
     {
-        $data = $request->all();
 
-        $image = $request->file('brand_image');
-        $name_gen = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
-        Image::make($image)->resize(300,300)->save('upload/brand/'.$name_gen);
-        $saveUrl = 'upload/brand/'.$name_gen;
-        $data['brand_image'] = $saveUrl;
+        $data = $request->except('image');
 
-        Brand::create($data);
+
+        if ($request->hasFile('image'))
+        {
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName();
+            $data['image'] = $imageName;
+            $brand = Brand::create($data);
+            $brand->addMedia($request->file('image'))->toMediaCollection();
+
+            return $brand;
+        }
+
+        $brand = Brand::create($data);
+
 
         $notification = [
             'message' => 'Brand Created Successfully',
@@ -41,15 +49,33 @@ class BrandController extends Controller
         return redirect()->route('all.brand')->with($notification);
     }
 
-    public function editBrand(Brand $brand) {
+    public function edit(Brand $brand) {
         return view('backend.brand.brand_edit');
     }
 
-    public function updateBrand(Brand $brand,Request $request)
+    public function update(Brand $brand,Request $request)
     {
-        $data = $request->all();
-        $brand->addMediaFromRequest($data['brand_image']);
+        $data = $request->except('image');
+
+        if ($request->hasFile('image'))
+        {
+            $image = $request->file('image');
+            $imageName = date('Ymdhis').'_'.$image->getClientOriginalName().$image->getClientOriginalExtension();
+            $data['image'] = $imageName;
+        }
 
         $brand->update($data);
+
+        $notification = [
+            'message' => 'Brand Updated Successfully',
+            'alert-type' => 'success',
+        ];
+
+        return redirect()->route('all.brand')->with($notification);
+    }
+
+    public function delete(Brand $brand)
+    {
+        $brand->delete();
     }
 }

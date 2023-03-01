@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function AdminDashboard()
+    public function dashboard()
     {
-        return view('admin.admin_dashboard');
+        return view('admin.index');
     }
 
-    public function AdminDestroy(Request $request)
+    public function logout(Request $request)
     {
         Auth::guard('web')->logout();
 
@@ -27,18 +27,18 @@ class AdminController extends Controller
         return redirect('/login');
     }
 
-    public function AdminLogin()
+    public function login()
     {
         return view('admin.admin_login');
     }
 
-    public function AdminProfile()
+    public function show()
     {
         $adminData = auth()->user();
         return view('admin.admin_profile_view',compact('adminData'));
     }
 
-    public function AdminProfileStore(Request $request)
+    public function store(Request $request)
     {
         $data = Auth::user();
         $data->name = $request->name;
@@ -63,12 +63,12 @@ class AdminController extends Controller
         return redirect()->back()->with($notification);
     }
 
-    public function AdminChangePassword()
+    public function changePassword()
     {
         return view('admin.admin_change_password');
     }
 
-    public function AdminUpdatePassword(Request $request)
+    public function updatePassword(Request $request)
     {
         $user = auth()->user();
         $data = $request->validate([
