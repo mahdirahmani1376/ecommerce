@@ -8,9 +8,11 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Response;
 
 class AdminController extends Controller
 {
+
     public function dashboard()
     {
         return view('admin.index');
@@ -24,7 +26,7 @@ class AdminController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return Response::redirectToRoute('admin.login');
     }
 
     public function login()
@@ -32,7 +34,7 @@ class AdminController extends Controller
         return view('admin.admin_login');
     }
 
-    public function show()
+    public function profile()
     {
         $adminData = auth()->user();
         return view('admin.admin_profile_view',compact('adminData'));

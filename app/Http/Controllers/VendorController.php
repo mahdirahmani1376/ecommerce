@@ -11,17 +11,12 @@ use Illuminate\Support\Facades\Hash;
 
 class VendorController extends Controller
 {
-    public function VendorDashboard()
+    public function dashboard()
     {
-        return view('vendor.index');
+        return view('admin.index');
     }
 
-    public function VendorLogin()
-    {
-        return view('vendor.vendor_login');
-    }
-
-    public function VendorDestroy(Request $request)
+    public function logout(Request $request)
     {
         Auth::guard('web')->logout();
 
@@ -29,43 +24,51 @@ class VendorController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/vendor/login');
+        return redirect('/login');
     }
 
-    public function VendorProfile()
+    public function login()
     {
-        $vendorData = auth()->user();
-        return view('vendor.vendor_profile_view',compact('vendorData'));
+        return view('admin.admin_login');
     }
 
-    public function VendorProfileStore(Request $request)
+    public function profile()
     {
-        $request = $request->all();
-        $user = Auth::user();
+        $adminData = auth()->user();
+        return view('admin.admin_profile_view',compact('adminData'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = Auth::user();
+        $data->name = $request->name;
+        $data->email = $request->email;
+        $data->phone = $request->phone;
+        $data->address = $request->address;
 
         if ($request->file('photo')) {
             $file = $request->file('photo');
             $fileName = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('upload/vendor_images'));
-            $request['photo'] = $fileName;
+            $file->move(public_path('upload/admin_images'));
+            $data['photo'] = $fileName;
         }
 
-        $user->update($request);
+        $data->save();
 
         $notification = [
-            'message' => 'Vendor Profile Updated Successfully',
+            'message' => 'Admin Profile Updated Successfully',
             'alert-type' => 'success',
         ];
 
         return redirect()->back()->with($notification);
     }
 
-    public function VendorChangePassword()
+    public function changePassword()
     {
-        return view('vendor.vendor_change_password');
+        return view('admin.admin_change_password');
     }
 
-    public function VendorUpdatePassword(Request $request)
+    public function updatePassword(Request $request)
     {
         $user = auth()->user();
         $data = $request->validate([

@@ -22,5 +22,9 @@ class DatabaseSeeder extends Seeder
         ]);
         $superAdmin = Role::create(['name' => config('auth.super_admin_role_name')]);
         $mahdi->assignRole($superAdmin);
+
+        $this->call([
+            RoleSeeder::class,
+        ]);
     }
 }

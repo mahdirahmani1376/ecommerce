@@ -8,17 +8,12 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function UserDashboard()
+    public function dashboard()
     {
-        return view('user.index');
+        return view('admin.index');
     }
 
-    public function UserLogin()
-    {
-        return view('user.user_login');
-    }
-
-    public function UserDestroy(Request $request)
+    public function logout(Request $request)
     {
         Auth::guard('web')->logout();
 
@@ -26,43 +21,51 @@ class UserController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/user/login');
+        return redirect('/login');
     }
 
-    public function UserProfile()
+    public function login()
     {
-        $userData = auth()->user();
-        return view('user.user_profile_view',compact('userData'));
+        return view('admin.admin_login');
     }
 
-    public function UserProfileStore(Request $request)
+    public function profile()
     {
-        $request = $request->all();
-        $user = Auth::user();
+        $adminData = auth()->user();
+        return view('admin.admin_profile_view',compact('adminData'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = Auth::user();
+        $data->name = $request->name;
+        $data->email = $request->email;
+        $data->phone = $request->phone;
+        $data->address = $request->address;
 
         if ($request->file('photo')) {
             $file = $request->file('photo');
             $fileName = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('upload/user_images'));
-            $request['photo'] = $fileName;
+            $file->move(public_path('upload/admin_images'));
+            $data['photo'] = $fileName;
         }
 
-        $user->update($request);
+        $data->save();
 
         $notification = [
-            'message' => 'User Profile Updated Successfully',
+            'message' => 'Admin Profile Updated Successfully',
             'alert-type' => 'success',
         ];
 
         return redirect()->back()->with($notification);
     }
 
-    public function UserChangePassword()
+    public function changePassword()
     {
-        return view('user.user_change_password');
+        return view('admin.admin_change_password');
     }
 
-    public function UserUpdatePassword(Request $request)
+    public function updatePassword(Request $request)
     {
         $user = auth()->user();
         $data = $request->validate([
