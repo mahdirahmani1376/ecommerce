@@ -42,20 +42,17 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
-        $data = Auth::user();
-        $data->name = $request->name;
-        $data->email = $request->email;
-        $data->phone = $request->phone;
-        $data->address = $request->address;
+        $admin = Auth::user();
+        $data = $request->all();
 
         if ($request->file('photo')) {
             $file = $request->file('photo');
-            $fileName = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('upload/admin_images'));
+            $fileName = date('YmdHi').$file->getClientOriginalName().$file->getClientOriginalExtension();
+            $admin->addMedia($file)->toMediaCollection();
             $data['photo'] = $fileName;
         }
 
-        $data->save();
+        $admin->update($data);
 
         $notification = [
             'message' => 'Admin Profile Updated Successfully',
