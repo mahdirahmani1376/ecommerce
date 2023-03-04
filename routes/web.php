@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::middleware(['auth'])->prefix('admin')->controller(AdminController::class)->group(function () {
+Route::middleware(['auth','role:Super Admin|admin'])->prefix('admin')->controller(AdminController::class)->group(function () {
     Route::get('login','login')->name('admin.login');
     Route::get('dashboard','dashboard')->name('admin.dashboard');
     Route::get('logout','logout')->name('admin.logout');
@@ -44,7 +44,7 @@ Route::middleware(['auth'])->prefix('admin')->controller(AdminController::class)
     Route::get('update_password','updatePassword')->name('admin.update.password');
 });
 
-Route::middleware(['auth','role:vendor'])->controller(VendorController::class)->group(function () {
+Route::middleware(['auth','role:vendor|Super Admin'])->controller(VendorController::class)->group(function () {
     Route::get('vendor/dashboard','vendorDashboard')->name('vendor.dashboard');
     Route::get('/vendor/login','VendorLogin')->name('vendor.login');
     Route::get('vendor/logout','VendorDestroy')->name('vendor.logout');
@@ -54,7 +54,7 @@ Route::middleware(['auth','role:vendor'])->controller(VendorController::class)->
     Route::get('vendor/update_password','VendorUpdatePassword')->name('vendor.update-password');
 });
 
-Route::middleware(['auth','role:vendor'])->controller(UserController::class)->group(function () {
+Route::middleware(['auth','role:vendor|Super Admin'])->controller(UserController::class)->group(function () {
     Route::get('user/dashboard','userDashboard')->name('user.dashboard');
     Route::get('/user/login','VendorLogin')->name('user.login');
     Route::get('user/logout','UserDestroy')->name('user.logout');
