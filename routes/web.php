@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SiteSettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
@@ -62,15 +64,30 @@ Route::middleware(['auth','role:user|Super Admin'])->prefix('user')->controller(
     Route::post('/user/profile/store','UserProfileStore')->name('user.profile.store');
     Route::get('user/change_password','UserChangePassword')->name('user.change.password');
     Route::get('user/update_password','UserUpdatePassword')->name('user.update-password');
-
-Route::middleware(['auth'])->prefix('brand')->group(function(){
-    Route::get('/', 'AllBrand')->name('all.brand');
-    Route::get('/{brand}', 'AddBrand')->name('add.brand');
-    Route::post('/', 'StoreBrand')->name('brands.store');
-    Route::get('/{brand}/edit', 'AddBrand')->name('edit.brand');
-    Route::put('{brand}/update', 'update')->name('update.brand');
 });
 
+Route::middleware(['auth'])->controller(BrandController::class)->prefix('brand')->group(function(){
+    Route::get('/', 'index')->name('all.brand');
+    Route::get('/{brand}', 'show')->name('add.brand');
+    Route::post('/', 'store')->name('brands.store');
+    Route::get('/{brand}/edit', 'edit')->name('edit.brand');
+    Route::put('{brand}/update', 'update')->name('update.brand');
+    Route::delete('{brand}', 'destroy')->name('update.brand');
+});
+
+Route::controller(SiteSettingController::class)->prefix('site.setting')->group(function (){
+   Route::get('/','siteSetting')->name('site.setting');
+   Route::post('/update','siteSettingUpdate')->name('site.setting.update');
+   Route::get('/seo/setting','seoSetting')->name('seo.setting');
+});
+
+Route::controller(CategoryController::class)->prefix('categories')->group(function (){
+   Route::get('/','index')->name('categories.index');
+   Route::get('/{category}','show')->name('categories.show');
+   Route::post('/','store')->name('categories.store');
+   Route::get('/{category}/edit','edit')->name('categories.edit');
+   Route::put('/{category}/update','update')->name('categories.update');
+   Route::delete('/{category}','destroy')->name('categories.destroy');
 });
 
 

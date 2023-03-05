@@ -30,15 +30,16 @@ class BrandController extends Controller
         if ($request->hasFile('image'))
         {
             $image = $request->file('image');
-            $imageName = date('Ymdhis').'_'.$image->getClientOriginalName().$image->getClientOriginalExtension();
+            $imageName = date('Ymdhis').'_'.$image->getClientOriginalName();
             $data['image'] = $imageName;
             $brand = Brand::create($data);
-            $brand->addMedia($request->file('image'))->toMediaCollection();
+            $brand->addMedia($request->file('image'))->toMediaCollection('default');
 
             return $brand;
         }
-
-        $brand = Brand::create($data);
+        else{
+            $brand = Brand::create($data);
+        }
 
 
         $notification = [

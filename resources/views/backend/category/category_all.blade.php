@@ -16,12 +16,12 @@
 					</div>
 					<div class="ms-auto">
 						<div class="btn-group">
-		<a href="{{ route('add.category') }}" class="btn btn-primary">Add Category</a> 				 
+		<a href="{{ route('categories.store') }}" class="btn btn-primary">Add Category</a>
 						</div>
 					</div>
 				</div>
 				<!--end breadcrumb-->
-				 
+
 				<hr/>
 				<div class="card">
 					<div class="card-body">
@@ -32,45 +32,45 @@
 				<th>Sl</th>
 				<th>Category Name </th>
 				<th>Category Image </th>
-				<th>Action</th> 
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
-	@foreach($categories as $key => $item)		
+	@foreach($categories as $key => $item)
 			<tr>
 				<td> {{ $key+1 }} </td>
-				<td>{{ $item->category_name }}</td>
-				<td> <img src="{{ asset($item->category_image) }}" style="width: 70px; height:40px;" >  </td>
-				
+				<td>{{ $item->name }}</td>
+				<td> <img src="{{ $item->getFirstMediaUrl() }}" style="width: 70px; height:40px;" >  </td>
+
 				<td>
- @if(Auth::user()->can('category.edit'))
-<a href="{{ route('edit.category',$item->id) }}" class="btn btn-info">Edit</a>
+ @if(Auth::user()->can('categories.edit'))
+<a href="{{ route('categories.edit',$item->id) }}" class="btn btn-info">Edit</a>
 @endif
-@if(Auth::user()->can('category.delete'))
-<a href="{{ route('delete.category',$item->id) }}" class="btn btn-danger" id="delete" >Delete</a>
+@if(Auth::user()->can('categories.delete'))
+<a href="{{ route('categories.destroy',$item->id) }}" class="btn btn-danger" id="delete" >Delete</a>
 @endif
 
-				</td> 
+				</td>
 			</tr>
 			@endforeach
-			 
-		 
+
+
 		</tbody>
 		<tfoot>
 			<tr>
 				<th>Sl</th>
 				<th>Category Name </th>
 				<th>Category Image </th>
-				<th>Action</th> 
+				<th>Action</th>
 			</tr>
 		</tfoot>
 	</table>
 						</div>
 					</div>
 				</div>
- 
 
-				 
+
+
 			</div>
 
 

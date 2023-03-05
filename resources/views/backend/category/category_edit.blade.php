@@ -3,7 +3,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<div class="page-content"> 
+<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
 					<div class="breadcrumb-title pe-3">Edit Category </div>
@@ -17,41 +17,39 @@
 						</nav>
 					</div>
 					<div class="ms-auto">
-				 
+
 					</div>
 				</div>
 				<!--end breadcrumb-->
 				<div class="container">
 					<div class="main-body">
 						<div class="row">
-							 
+
 <div class="col-lg-10">
 	<div class="card">
 		<div class="card-body">
 
-		<form id="myForm" method="post" action="{{ route('update.category') }}" enctype="multipart/form-data" >
+		<form id="myForm" method="post" action="{{ route('categories.update',$category) }}" enctype="multipart/form-data" >
 			@csrf
-		 
+            @method('PUT')
 		 <input type="hidden" name="id" value="{{ $category->id }}">
-		 <input type="hidden" name="old_image" value="{{ $category->category_image }}">
-
 
 			<div class="row mb-3">
 				<div class="col-sm-3">
 					<h6 class="mb-0">Category Name</h6>
 				</div>
 				<div class="form-group col-sm-9 text-secondary">
-					<input type="text" name="category_name" class="form-control" value="{{ $category->category_name }}"   />
+					<input type="text" name="name" class="form-control" value="{{ $category->name }}"   />
 				</div>
 			</div>
-			  
+
 
 			<div class="row mb-3">
 				<div class="col-sm-3">
 					<h6 class="mb-0">Category Image </h6>
 				</div>
 				<div class="col-sm-9 text-secondary">
-					<input type="file" name="category_image" class="form-control"  id="image"   />
+					<input type="file" name="image" class="form-control"  id="image"   />
 				</div>
 			</div>
 
@@ -62,7 +60,7 @@
 					<h6 class="mb-0"> </h6>
 				</div>
 				<div class="col-sm-9 text-secondary">
-  <img id="showImage" src="{{ asset($category->category_image)   }}" alt="Admin" style="width:100px; height: 100px;"  >
+  <img id="showImage" src="{{ $category->getFirstMediaUrl()   }}" alt="Admin" style="width:100px; height: 100px;"  >
 				</div>
 			</div>
 
@@ -83,7 +81,7 @@
 
 
 	</div>
-	 
+
 
 
 
@@ -102,14 +100,14 @@
             rules: {
                 category_name: {
                     required : true,
-                }, 
+                },
             },
             messages :{
                 category_name: {
                     required : 'Please Enter Category Name',
                 },
             },
-            errorElement : 'span', 
+            errorElement : 'span',
             errorPlacement: function (error,element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
@@ -122,7 +120,7 @@
             },
         });
     });
-    
+
 </script>
 
 

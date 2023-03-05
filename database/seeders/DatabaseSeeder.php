@@ -3,9 +3,14 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Category;
+use App\Models\Seo;
+use App\Models\SiteSetting;
 use App\Models\User;
+use Database\Factories\SeoFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
@@ -15,6 +20,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $permissions = collect(['delete','store','update','view','viewAny']);
+        $permissions->map(fn($permission) => Permission::create(['name' => $permission]));
+
+
         $mahdi = User::factory()->create([
             'name' => 'mahdi rahmani',
             'password' => Hash::make('123456'),
@@ -22,9 +31,12 @@ class DatabaseSeeder extends Seeder
         ]);
         $superAdmin = Role::create(['name' => config('auth.super_admin_role_name')]);
         $mahdi->assignRole($superAdmin);
+        Seo::factory()->create();
+        SiteSetting::factory()->create();
 
         $this->call([
             RoleSeeder::class,
+            CategorySeeder::class,
         ]);
     }
 }
