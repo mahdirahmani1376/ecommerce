@@ -10,6 +10,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Brand extends Model implements HasMedia
 {
     protected $guarded = [];
+    protected $primaryKey = 'brand_id';
 
     use HasFactory,InteractsWithMedia;
 }

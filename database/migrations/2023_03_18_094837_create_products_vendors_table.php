@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seos', function (Blueprint $table) {
+        Schema::create('products_vendors', function (Blueprint $table) {
             $table->id();
-            $table->string('meta_title')->nullable();
-            $table->string('meta_author')->nullable();
-            $table->string('meta_keyword')->nullable();
-            $table->text('meta_description')->nullable();
+            $table->foreignId('product_id');
+            $table->foreignId('vendor_id');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seos');
+        Schema::dropIfExists('products_vendores');
     }
 };

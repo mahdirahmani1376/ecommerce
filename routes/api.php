@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\ApiAuthController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,7 +16,27 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::controller(ApiAuthController::class)->group(function (){
+   Route::get('/user','show')->name('user.show');
+   Route::post('/tokens/create','createToken')->name('tokens.create');
+   Route::post('/user/login','login')->name('user.login');
+   Route::post('/user/logout','logout')->name('user.logout');
 });
+
+Route::middleware('auth:sanctum')->group(function (){
+    Route::controller(OrderController::class)->prefix('/orders')->group(function (){
+        Route::get('/','index')->name('orders.index')->middleware('can:orders.view_any');
+        Route::get('/{order}','show')->name('orders.show')->middleware('can:orders.view');
+        Route::post('/','store')->name('orders.store');
+        Route::put('/{order}','update')->name('orders.update')->middleware('can:orders.update');
+        Route::delete('/{order}','delete')->name('orders.delete')->middleware('can:orders.delete');
+    });
+    Route::controller(ProductController::class)->prefix('/products')->group(function (){
+        Route::get('/','index')->name('products.index')->middleware('can:products.view_any');
+        Route::get('/{product}','view')->name('products.view')->middleware('can:products.view');
+        Route::post('/','store')->name('products.store')->middleware('can:products.store');
+        Route::put('/{product}','update')->name('products.update')->middleware('can:products.update');
+        Route::delete('/{product}','delete')->name('products.delete')->middleware('can:products.delete');
+    });
+});
+

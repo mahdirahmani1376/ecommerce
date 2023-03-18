@@ -1,24 +1,26 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Spatie\Permission\Models\Role;
+use Tests\Feature\BaseTestCase;
 use Tests\TestCase;
 
-class BaseTestCase extends TestCase
+class ApiAuthControllerTest extends TestCase
 {
-    protected function SetUp(): void
+    use RefreshDatabase;
+
+    public function setUp(): void
     {
-        parent::SetUp();
+        parent::setUp();
         $superAdmin = User::factory()->create([
             'name' => 'mahdi rahmani',
             'password' => '123456',
             'email' => 'rahmanimahdi16@gmail.com',
         ]);
-
         $superAdminRole = Role::create([
             'name' => config('auth.super_admin_role_name')
         ]);
@@ -33,7 +35,20 @@ class BaseTestCase extends TestCase
 
         $this->superAdmin = $superAdmin;
         $this->admin = $admin;
-
-        $this->actingAs($superAdmin);
     }
+
+    /** @test */
+    public function can_user_recieve_token()
+    {
+        $response = $this->actingAs($this->superAdmin)->postJson(route('tokens.create'));
+
+        $response->assertStatus(200);
+        $response->assertJson(fn(AssertableJson $json) => $json
+            ->has('message')
+            ->has('token')
+            ->etc()
+        );
+    }
+
+
 }
