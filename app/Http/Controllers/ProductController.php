@@ -16,7 +16,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Response::json(ProductResource::collection(Product::with('vendors','orders')->paginate()));
+        return Response::json(ProductResource::collection(Product::Filter()->with(['vendors','category','orders'])->paginate()));
     }
 
     /**

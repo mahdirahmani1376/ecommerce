@@ -26,7 +26,6 @@ class StoreproductRequest extends FormRequest
             'name' => ['required','string','max:255'],
             'rating' => ['nullable',Rule::in(array(range(0,6)))],
             'description' => ['string','nullable','max:255'],
-            'in_stock' => ['boolean','required'],
             'weight' => ['integer','required'],
             'image' => ['image','nullable'],
         ];

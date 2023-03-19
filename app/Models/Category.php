@@ -13,6 +13,7 @@ class Category extends Model implements HasMedia
     use HasFactory,InteractsWithMedia,HasRoles;
 
     protected $guarded = [];
+    protected $primaryKey = 'category_id';
 
     public function products()
     {

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->integer('rating')->nullable();
             $table->longText('description')->nullable();
             $table->integer('weight');
-            $table->foreignId('brand')->nullable()->index();
+            $table->foreignId('brand_id')->nullable()->index();
+            $table->foreignId('category_id')->nullable()->index();
             $table->timestamps();
             $table->softDeletes();
         });

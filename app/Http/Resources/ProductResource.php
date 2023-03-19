@@ -15,12 +15,11 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'rating' => $this->rating,
             'description' => $this->description,
-            'in_stock' => $this->in_stock,
             'weight' => $this->weight,
-            'dimensions' => $this->dimensions,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
+            'category' => CategoryResource::make($this->whenLoaded('category')),
             'vendor' => VendorResource::collection($this->whenLoaded('vendors')),
             'orders' => OrderResource::collection($this->whenLoaded('orders')),
         ];

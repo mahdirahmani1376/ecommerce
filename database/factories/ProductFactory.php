@@ -15,7 +15,6 @@ class ProductFactory extends Factory
             'name' => $this->faker->name(),
             'rating' => $this->faker->randomNumber(),
             'description' => $this->faker->text(),
-            'in_stock' => $this->faker->boolean(),
             'weight' => $this->faker->randomNumber(),
         ];
     }
