@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Vendor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OrderFactory extends Factory
@@ -14,9 +15,9 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'order_id' => $this->faker->randomNumber(),
             'user_id' => User::factory(),
             'product_id' => Product::factory(),
+            'vendor_id' => Vendor::factory(),
         ];
     }
 

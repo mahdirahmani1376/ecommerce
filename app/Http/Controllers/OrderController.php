@@ -27,10 +27,12 @@ class OrderController extends Controller
         $validated = $request->validated();
 
         $order = Order::create([
-            'product_id' => $validated['product_id'],
+            'product_id' => $validated['product']['product_id'],
             'user_id' => auth()->id(),
+            'vendor_id' => $validated['vendor']['vendor_id'],
         ]);
-        return OrderResource::make($order->load('user','products'));
+
+        return OrderResource::make($order->load('user','products','vendor'));
     }
 
     /**
@@ -48,7 +50,10 @@ class OrderController extends Controller
     {
         $validated = $request->validated();
 
-        $order->update(['product_id' => $validated->product_id,'user_id' => auth()->user()]);
+        $order->update([
+            'product_id' => $validated['product']['product_id'],
+            'vendor_id' => $validated['vendor']['vendor_id'],
+        ]);
 
         return Response::json(OrderResource::make($order->load('user','products')));
     }

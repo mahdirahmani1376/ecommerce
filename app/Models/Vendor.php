@@ -20,4 +20,9 @@ class Vendor extends Model implements HasMedia
     {
         return $this->belongsToMany(Product::class,'products_vendors','vendor_id','product_id');
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class,'vendor_id');
+    }
 }

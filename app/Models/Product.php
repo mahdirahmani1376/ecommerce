@@ -26,7 +26,17 @@ class Product extends Model implements HasMedia
 
     public function vendors(): BelongsToMany
     {
-        return $this->belongsToMany(Vendor::class,'vendors','product_id','vendor_id');
+        return $this->belongsToMany(Vendor::class,'products_vendors','product_id','vendor_id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class,'category_id');
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class,'product_id');
     }
 
 }

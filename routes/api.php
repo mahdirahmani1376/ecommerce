@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Auth\ApiAuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
@@ -38,5 +40,7 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::put('/{product}','update')->name('products.update')->middleware('can:products.update');
         Route::delete('/{product}','delete')->name('products.delete')->middleware('can:products.delete');
     });
+    Route::apiResource('address',AddressController::class);
+    Route::apiResource('category',CategoryController::class);
 });
 

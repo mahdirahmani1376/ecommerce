@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id');
             $table->foreignId('vendor_id');
+            $table->integer('price')->nullable();
+            $table->integer('stock')->nullable();
             $table->timestamps();
         });
     }

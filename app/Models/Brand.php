@@ -13,4 +13,9 @@ class Brand extends Model implements HasMedia
     protected $primaryKey = 'brand_id';
 
     use HasFactory,InteractsWithMedia;
+
+    public function products()
+    {
+        return $this->hasMany(Product::class,'brand_id');
+    }
 }

@@ -23,8 +23,8 @@ class UpdateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-//            'user_id' => ['required',Rule::exists('users','user_id')],
-            'product_id' => ['required',Rule::exists('products','product_id')],
+            'product.product_id' => ['required','exists:products,product_id'],
+            'vendor.vendor_id' => ['required','exists:vendors,vendor_id']
         ];
     }
 }

@@ -16,12 +16,12 @@
 					</div>
 					<div class="ms-auto">
 						<div class="btn-group">
-		<a href="{{ route('add.subcategory') }}" class="btn btn-primary">Add SubCategory</a> 				 
+		<a href="{{ route('add.subcategory') }}" class="btn btn-primary">Add SubCategory</a>
 						</div>
 					</div>
 				</div>
 				<!--end breadcrumb-->
-				 
+
 				<hr/>
 				<div class="card">
 					<div class="card-body">
@@ -32,16 +32,16 @@
 				<th>Sl</th>
 				<th>Category Name </th>
 				<th>SubCategory Name </th>
-				<th>Action</th> 
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
-	@foreach($subcategories as $key => $item)		
+	@foreach($parentCategories as $key => $item)
 			<tr>
 				<td> {{ $key+1 }} </td>
 				<td> {{ $item['category']['category_name'] }}</td>
 				<td> {{ $item->subcategory_name }}  </td>
-				
+
 				<td>
  @if(Auth::user()->can('subcategory.edit'))
 <a href="{{ route('edit.subcategory',$item->id) }}" class="btn btn-info">Edit</a>
@@ -49,27 +49,27 @@
  @if(Auth::user()->can('subcategory.delete'))
 <a href="{{ route('delete.subcategory',$item->id) }}" class="btn btn-danger" id="delete" >Delete</a>
 @endif
-				</td> 
+				</td>
 			</tr>
 			@endforeach
-			 
-		 
+
+
 		</tbody>
 		<tfoot>
 			<tr>
 				<th>Sl</th>
 				<th>Category Name </th>
 				<th>SubCategory Name </th>
-				<th>Action</th> 
+				<th>Action</th>
 			</tr>
 		</tfoot>
 	</table>
 						</div>
 					</div>
 				</div>
- 
 
-				 
+
+
 			</div>
 
 

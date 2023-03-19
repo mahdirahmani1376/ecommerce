@@ -21,11 +21,10 @@ class UpdateCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd(request());
         return [
             'name' => 'required|string',
-            'image' => 'nullable|file',
+            'category_id' => ['nullable','exists:categories,category_id'],
+            'slug' => 'nullable|string',
         ];
-
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -16,17 +17,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        return view('backend.category.category_all',compact('categories'));
+        return Response::json(Category::with('products','parentCategories')->get());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('backend.category.category_add');
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -34,8 +27,9 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         $validated = $request->validated();
-        Category::create($validated);
-        return view('backend.category.category_all');
+        $category = Category::create($validated);
+
+        return Response::json(CategoryResource::make($category->load('products','parentCategories')));
     }
 
     /**
@@ -43,33 +37,19 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return view('frontend.product.category_view',compact('category'));
+        return Response::json(CategoryResource::make($category->load('products','parentCategories')));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
-    {
-        return view('backend.category.category_edit',compact('category'));
-    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $data = $request->only('name');
-        $file = $request->file('image');
-        if ($file)
-        {
-            $fileName = $file->getClientOriginalName();
-            $category->clearMediaCollection();
-            $category->addMedia($file)->toMediaCollection('default');
-        }
+        $validated = $request->validated();
+        Category::update($validated);
 
-        $category->update($data);
-        return Response::redirectToRoute('categories.index');
+        return Response::json(CategoryResource::make($category->load('products','parentCategories')));
     }
 
     /**
@@ -79,6 +59,8 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return view('backend.category.category_all');
+        return Response::json([
+            'message' => 'Category deleted successfully'
+        ]);
     }
 }
