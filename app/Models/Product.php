@@ -25,12 +25,12 @@ class Product extends Model implements HasMedia
 
     public function orders()
     {
-        return $this->hasMany(Order::class,'product_id');
+        return $this->belongsToMany(Order::class,'orders_products','product_id','order_id');
     }
 
     public function vendors(): BelongsToMany
     {
-        return $this->belongsToMany(Vendor::class,'products_vendors','product_id','vendor_id');
+        return $this->belongsToMany(Vendor::class,'products_vendors','product_id','vendor_id')->using(ProductVendor::class);
     }
 
     public function category(): BelongsTo
@@ -41,6 +41,11 @@ class Product extends Model implements HasMedia
     public function brand()
     {
         return $this->belongsTo(Brand::class,'product_id');
+    }
+
+    public function productsVendors()
+    {
+        return $this->hasMany(ProductVendor::class,'product_id');
     }
 
     public static function filter(): QueryBuilder

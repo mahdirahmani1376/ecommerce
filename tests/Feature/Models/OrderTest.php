@@ -2,10 +2,14 @@
 
 namespace Tests\Feature\Models;
 
+use App\Enums\StockEnum;
+use App\Events\LowStockEvent;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductVendor;
 use App\Models\Vendor;
 use App\States\OrderStates\Paid;
+use Bus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -24,7 +28,10 @@ class OrderTest extends BaseTestCase
 
         $vendor = Vendor::factory()->create();
         $product = Product::factory()->create();
-        $product->vendors()->attach($vendor);
+        $productVendor = ProductVendor::factory()->create([
+            'product_id' => $product->product_id,
+            'vendor_id' => $vendor->vendor_id,
+        ]);
 
         $data = [
             'product' => $product->toArray(),
@@ -61,6 +68,47 @@ class OrderTest extends BaseTestCase
             'order_id' => $order->order_id,
             'state' => Paid::$name,
         ]);
+    }
+
+    /** @test */
+    public function low_stock_email_is_sent()
+    {
+        $user = auth()->user();
+
+        $vendor = Vendor::factory()->create();
+        $product = Product::factory()->create();
+        $productVendor = ProductVendor::factory()->create([
+            'vendor_id' => $vendor->vendor_id,
+            'stock' => $stock = StockEnum::LowStockEnum->value,
+        ]);
+
+        $data = [
+            'products' => [
+                'product_id' => $product->product_id,
+            ],
+            'vendor' => $vendor->toArray(),
+        ];
+
+        $response = $this->postJson(route('orders.store'),$data);
+
+        $response->assertStatus(201);
+
+        $response->assertJson(fn(AssertableJson $json) => $json
+            ->where('data.products.0.name',$product->name)
+            ->where('data.user.name',$user->name)
+            ->etc()
+        );
+        $this->assertDatabaseHas('orders',[
+            'user_id' => $user->id,
+        ]);
+
+        $this->assertDatabaseHas('products_vendors',
+        [
+           'product_id' => $product->product_id,
+           'vendor_id' => $vendor->vendor_id,
+           'stock' => --$stock,
+        ]);
+
     }
 
 }

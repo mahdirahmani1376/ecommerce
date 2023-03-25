@@ -25,7 +25,8 @@ class StoreOrderRequest extends FormRequest
         return [
 //            'user_id' => ['required',Rule::exists('users','user_id')],
 //            'product_id' => ['required','exists:products,product_id'],
-            'product.product_id' => ['required','exists:products,product_id'],
+//            'products' => ['required','array'],
+            'products.*' => ['required','exists:products,product_id'],
             'vendor.vendor_id' => ['required','exists:vendors,vendor_id']
         ];
     }

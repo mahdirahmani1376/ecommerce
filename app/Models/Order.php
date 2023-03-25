@@ -22,7 +22,7 @@ class Order extends Model
 
     public function products()
     {
-        return $this->belongsTo(Product::class,'product_id');
+        return $this->belongsToMany(Product::class,'orders_products','order_id','product_id','order_id','product_id');
     }
 
     public function user()
@@ -33,5 +33,10 @@ class Order extends Model
     public function  vendor()
     {
         return $this->belongsTo(Vendor::class,'vendor_id');
+    }
+
+    public function delivery()
+    {
+        return $this->hasOne(Delivery::class,'order_id');
     }
 }

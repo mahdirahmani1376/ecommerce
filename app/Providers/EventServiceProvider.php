@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\LowStockEvent;
+use App\Listeners\LowStockListener;
+use App\Models\Order;
+use App\Models\ProductVendor;
+use App\Observers\OrderObserver;
+use App\Observers\ProductVendorObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -17,6 +23,18 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        LowStockEvent::class => [
+            LowStockListener::class,
+        ],
+    ];
+
+    protected $observers = [
+        ProductVendor::class => [
+            ProductVendorObserver::class
+        ],
+        Order::class => [
+            OrderObserver::class
         ],
     ];
 

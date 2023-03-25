@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
@@ -42,5 +43,7 @@ Route::middleware('auth:sanctum')->group(function (){
     });
     Route::apiResource('address',AddressController::class);
     Route::apiResource('category',CategoryController::class);
+    Route::apiResource('order',OrderController::class);
+    Route::apiResource('delivery',DeliveryController::class);
 });
 

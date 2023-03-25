@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Events\LowStockEvent;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Vendor;
+use Bus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
