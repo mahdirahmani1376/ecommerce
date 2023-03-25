@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
@@ -20,7 +21,7 @@ class Category extends Model implements HasMedia
         return $this->hasMany(Product::class,'category_id');
     }
 
-    public function parentCategories()
+    public function parentCategories(): HasMany
     {
         return $this->hasMany(Category::class,'parent_category');
     }
