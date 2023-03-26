@@ -19,6 +19,7 @@ class LowStockNotification extends Notification implements ShouldQueue
         ProductVendor $productVendor
     )
     {
+
         $this->productVendor = $productVendor;
     }
 
@@ -31,7 +32,7 @@ class LowStockNotification extends Notification implements ShouldQueue
     {
         $product = $this->productVendor->product;
         return (new MailMessage)
-            ->line('Your product with name:'.$product->name.' has less than'.str(StockEnum::LowStockEnum).'stock available')
+            ->line('Your product with name:'.$product->name.' has less than'.StockEnum::LowStockEnum->value.'stock available')
             ->action('Product url:', route('products.view',$product))
             ->line('Please consider that')
             ;

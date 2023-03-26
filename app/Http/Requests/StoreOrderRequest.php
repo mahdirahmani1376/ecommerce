@@ -23,10 +23,7 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-//            'user_id' => ['required',Rule::exists('users','user_id')],
-//            'product_id' => ['required','exists:products,product_id'],
-//            'products' => ['required','array'],
-            'products.*' => ['required','exists:products,product_id'],
+            'products.*.product_id' => ['required','exists:products_vendors,product_id'],
             'vendor.vendor_id' => ['required','exists:vendors,vendor_id']
         ];
     }

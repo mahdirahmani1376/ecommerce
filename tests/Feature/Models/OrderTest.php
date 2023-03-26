@@ -77,22 +77,23 @@ class OrderTest extends BaseTestCase
 
         $vendor = Vendor::factory()->create();
         $product = Product::factory()->create();
-        $productVendor = ProductVendor::factory()->create([
+        $product2 = Product::factory()->create();
+
+        $productVendor = ProductVendor::factory()->count(2)->create([
             'vendor_id' => $vendor->vendor_id,
             'stock' => $stock = StockEnum::LowStockEnum->value,
         ]);
 
         $data = [
-            'products' => [
-                'product_id' => $product->product_id,
-            ],
+            'products' =>
+                $productVendor->toArray()
+            ,
             'vendor' => $vendor->toArray(),
         ];
 
-        $response = $this->postJson(route('orders.store'),$data);
+        $response = $this->postJson(route('orders.store',$data));
 
         $response->assertStatus(201);
-
         $response->assertJson(fn(AssertableJson $json) => $json
             ->where('data.products.0.name',$product->name)
             ->where('data.user.name',$user->name)

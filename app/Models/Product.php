@@ -22,6 +22,7 @@ class Product extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $primaryKey = 'product_id';
+    protected $guarded = [];
 
     public function orders()
     {
@@ -41,11 +42,6 @@ class Product extends Model implements HasMedia
     public function brand()
     {
         return $this->belongsTo(Brand::class,'product_id');
-    }
-
-    public function productsVendors()
-    {
-        return $this->hasMany(ProductVendor::class,'product_id');
     }
 
     public static function filter(): QueryBuilder

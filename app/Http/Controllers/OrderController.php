@@ -28,35 +28,17 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
+
         $validated = $request->validated();
-
-        $vendor = Vendor::find($validated['vendor']['vendor_id']);
-
+        $productsIds = collect($validated['products'])->pluck('product_id')->all();
+        $products = Product::find($productsIds);
+        $vendor = Vendor::find($validated['vendor'])->first();
         $order = Order::create([
             'user_id' => auth()->id(),
             'vendor_id' => $validated['vendor']['vendor_id'],
         ]);
 
-        collect($validated['products'])->each(function ($data) use ($order, $vendor, $validated) {
-            $product = Product::find($data['product_id']);
-
-            $productVendor = ProductVendor::where([
-                'vendor_id' => $vendor->vendor_id,
-                'product_id' => $product->product_id,
-            ])->first();
-
-            $stock = $productVendor->stock;
-
-            if ($stock <= 0){
-                return Response::json(['message' => 'product is out of stock']);
-            }
-
-            $productVendor->update([
-                'stock' => --$productVendor->stock,
-            ]);
-
-            $order->products()->sync($product->product_id);
-        });
+        $order->products()->sync($products);
 
         return OrderResource::make($order->load('user','products','vendor'));
     }

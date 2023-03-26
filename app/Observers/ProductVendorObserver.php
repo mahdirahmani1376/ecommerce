@@ -39,9 +39,10 @@ class ProductVendorObserver
 
     public function checkStock(ProductVendor $productVendor)
     {
-        if ($productVendor->stock <= StockEnum::LowStockEnum)
+
+        if ($productVendor->stock <= StockEnum::LowStockEnum->value)
         {
-            event(new LowStockEvent($productVendor));
+//            event(new LowStockEvent($productVendor));
         }
     }
 }

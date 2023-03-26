@@ -25,7 +25,6 @@ class LowStockEventJob implements ShouldQueue
     public function handle()
     {
         $vendor = $this->event->productVendor->vendor;
-
-        Notification::send($vendor->email_address,new LowStockNotification($this->event->productVendor));
+        Notification::send($vendor,new LowStockNotification($this->event->productVendor));
     }
 }
