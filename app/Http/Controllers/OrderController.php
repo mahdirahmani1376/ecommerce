@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVendor;
 use App\Models\Vendor;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
@@ -20,7 +21,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return Response::json(OrderResource::make(Order::with('products','user')->paginate()));
+        return Response::json(OrderResource::make(Order::with('productsVendors','user')->paginate()));
     }
 
     /**
@@ -30,17 +31,22 @@ class OrderController extends Controller
     {
 
         $validated = $request->validated();
-        $productsIds = collect($validated['products'])->pluck('product_id')->all();
-        $products = Product::find($productsIds);
-        $vendor = Vendor::find($validated['vendor'])->first();
+        $productsIds = collect($validated['product_vendors'])->pluck('id')->all();
+
+        $productVendors = ProductVendor::findMany($productsIds);
         $order = Order::create([
             'user_id' => auth()->id(),
-            'vendor_id' => $validated['vendor']['vendor_id'],
         ]);
 
-        $order->products()->sync($products);
+        $order->productsVendors()->sync($productVendors);
 
-        return OrderResource::make($order->load('user','products','vendor'));
+        $productVendors->each(function (ProductVendor $productVendor){
+            $productVendor->update([
+                'stock' => --$productVendor->stock
+            ]);
+        });
+
+        return OrderResource::make($order->load('user','productsVendors'));
     }
 
     /**
@@ -48,7 +54,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        return Response::json(OrderResource::make($order->with('user','products')));
+        return Response::json(OrderResource::make($order->with('user','productsVendors')));
     }
 
     /**
@@ -57,13 +63,11 @@ class OrderController extends Controller
     public function update(UpdateOrderRequest $request, Order $order)
     {
         $validated = $request->validated();
+        $productsVendorIds = collect($validated['product_vendors'])->pluck('id');
 
-        $order->update([
-            'product_id' => $validated['product']['product_id'],
-            'vendor_id' => $validated['vendor']['vendor_id'],
-        ]);
+        $order->productsVendors()->sync($productsVendorIds);
 
-        return Response::json(OrderResource::make($order->load('user','products')));
+        return Response::json(OrderResource::make($order->load('user','productsVendors')));
     }
 
     /**

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('products_vendors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id');
-            $table->foreignId('vendor_id');
+            $table->foreignId('product_id')->index();
+            $table->foreignId('vendor_id')->index();
             $table->integer('price');
             $table->integer('stock')->default(0);
             $table->timestamps();

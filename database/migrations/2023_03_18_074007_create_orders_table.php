@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id('order_id');
             $table->foreignId('user_id');
-            $table->foreignId('vendor_id');
             $table->string('state');
             $table->timestamps();
             $table->softDeletes();

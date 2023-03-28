@@ -5,6 +5,7 @@ namespace Tests\Feature\Models;
 use App\Models\Address;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\Feature\BaseTestCase;
 use Tests\TestCase;
 
@@ -18,9 +19,8 @@ class AddressTest extends BaseTestCase
         $user = User::factory()->create();
         $address = Address::factory()->make();
         $response = $this->actingAs($user)->postJson(route('address.store'),$address->toArray());
-
         $response->assertStatus(200);
-        $this->assertDatabaseHas('users',[
+        $this->assertDatabaseHas('addresses',[
             'address' => $address->address,
         ]);
     }

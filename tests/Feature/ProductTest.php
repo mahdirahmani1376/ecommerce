@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use App\Events\LowStockEvent;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductVendor;
 use App\Models\Vendor;
 use Bus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,13 +28,20 @@ class ProductTest extends BaseTestCase
             'category_id' => $category->category_id,
             'name' => 'test',
         ]);
-        Product::factory(100)->create();
+        Product::factory(100)->has(Brand::factory(),'brand')->create();
         $vendor = Vendor::factory()->create();
-        $product->vendors()->sync($vendor);
-        $order = Order::factory()->create([
-            'product_id' => $product->product_id,
+
+        $productVendor = ProductVendor::factory()->create([
             'vendor_id' => $vendor->vendor_id,
+            'product_id' => $product->product_id,
         ]);
+
+        $user = $this->superAdmin;
+        $order = Order::factory()->create([
+            'user_id' => $user->id
+        ]);
+
+
 
         $response = $this->getJson(route('products.index',[
             'filter' => [

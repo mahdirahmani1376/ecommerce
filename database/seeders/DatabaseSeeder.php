@@ -3,11 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Enums\StockEnum;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Seo;
-use App\Models\SiteSetting;
+use App\Models\ProductVendor;
 use App\Models\User;
+use App\Models\Vendor;
 use Database\Factories\ProductFactory;
 use Database\Factories\SeoFactory;
 use Illuminate\Database\Seeder;
@@ -33,7 +34,12 @@ class DatabaseSeeder extends Seeder
         $superAdmin = Role::create(['name' => config('auth.super_admin_role_name')]);
         $mahdi->assignRole($superAdmin);
 
-        Product::factory()->count(20)->create();
+        $vendor = Vendor::factory()->create();
+        $productVendor = ProductVendor::factory()->count(2)->create([
+            'vendor_id' => $vendor->vendor_id,
+            'stock' => $stock = StockEnum::LowStockEnum->value,
+        ]);
+
         $this->call([
             RoleSeeder::class,
             CategorySeeder::class,

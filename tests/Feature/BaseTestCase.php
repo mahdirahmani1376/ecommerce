@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -10,6 +11,9 @@ use Tests\TestCase;
 
 class BaseTestCase extends TestCase
 {
+
+    protected User $superAdmin;
+
     protected function SetUp(): void
     {
         parent::SetUp();

@@ -4,28 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBrandRequest;
 use App\Http\Requests\UpdateBrandRequest;
+use App\Http\Resources\BrandResource;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
+use Response;
 
 class BrandController extends Controller
 {
     public function index()
     {
         $brands = Brand::latest()->get();
-        return view('backend.brand.brand_all',compact('brands'));
+        return Response::json(BrandResource::collection($brands));
     }
 
-    public function show()
+    public function show(Brand $brand)
     {
-        return view('backend.brand.brand_add');
+        return Response::json(BrandResource::make($brand));
     }
 
     public function store(Request $request)
     {
 
         $data = $request->except('image');
-
 
         if ($request->hasFile('image'))
         {
@@ -47,11 +48,7 @@ class BrandController extends Controller
             'alert-type' => 'success',
         ];
 
-        return redirect()->route('all.brand')->with($notification);
-    }
-
-    public function edit(Brand $brand) {
-        return view('backend.brand.brand_edit');
+        return Response::json(BrandResource::make($brand))->withCookie($notification);
     }
 
     public function update(Brand $brand,Request $request)
@@ -72,11 +69,15 @@ class BrandController extends Controller
             'alert-type' => 'success',
         ];
 
-        return redirect()->route('all.brand')->with($notification);
+        return Response::json(BrandResource::make($brand))->withCookie($notification);
     }
 
     public function delete(Brand $brand)
     {
         $brand->delete();
+
+        return Response::json([
+            'message' => 'Brand Deleted Successfully'
+        ]);
     }
 }

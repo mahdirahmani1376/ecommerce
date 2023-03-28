@@ -9,7 +9,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class BrandControllerTest extends TestCase
+class BrandControllerTest extends BaseTestCase
 {
     use RefreshDatabase;
 
@@ -22,15 +22,14 @@ class BrandControllerTest extends TestCase
         $brand = Brand::factory()->raw();
         $brand['image'] = $image;
 
-        $response = $this->post(route('brands.store'),$brand);
+        $response = $this->actingAs($this->superAdmin)->postJson(route('brands.store'),$brand);
+        $file = Brand::where('name',$brand['name'])->first()->getFirstMediaPath();
 
-//        $response->assertStatus(200);
+        $response->assertStatus(201);
         $this->assertDatabaseHas('brands',[
             'name' => $brand['name'],
-            'image' => 'test',
         ]);
 
-        $file = Brand::where('name',$brand['name'])->first()->getFirstMediaPath();
         $this->assertFileExists($file);
 
     }

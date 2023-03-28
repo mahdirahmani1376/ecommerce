@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::put('/{product}','update')->name('products.update')->middleware('can:products.update');
         Route::delete('/{product}','delete')->name('products.delete')->middleware('can:products.delete');
     });
+
     Route::apiResource('address',AddressController::class);
     Route::apiResource('category',CategoryController::class);
     Route::apiResource('order',OrderController::class);

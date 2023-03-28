@@ -11,6 +11,7 @@ class ProductVendor extends Pivot
     use HasFactory;
 
     protected $table = 'products_vendors';
+    public $incrementing = true;
 
     public function vendor(): BelongsTo
     {

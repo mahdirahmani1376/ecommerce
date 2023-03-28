@@ -23,8 +23,10 @@ class UpdateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product.product_id' => ['required','exists:products,product_id'],
-            'vendor.vendor_id' => ['required','exists:vendors,vendor_id']
+            'product_vendors' => ['array'],
+            'product_vendors.*.id' => ['required','exists:products_vendors,id'],
+            'product_vendors.*.product_id' => ['required','exists:products,product_id'],
+            'product_vendors.*.vendor_id' => ['required','exists:vendors,vendor_id'],
         ];
     }
 }

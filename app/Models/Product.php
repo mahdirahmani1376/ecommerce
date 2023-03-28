@@ -26,12 +26,19 @@ class Product extends Model implements HasMedia
 
     public function orders()
     {
-        return $this->belongsToMany(Order::class,'orders_products','product_id','order_id');
+        ;
     }
 
     public function vendors(): BelongsToMany
     {
-        return $this->belongsToMany(Vendor::class,'products_vendors','product_id','vendor_id')->using(ProductVendor::class);
+        return $this->belongsToMany(Vendor::class,'products_vendors','product_id','vendor_id')
+            ->withPivot('stock', 'price')
+            ->using(ProductVendor::class);
+    }
+
+    public function productVendor(): HasMany
+    {
+        return $this->hasMany(ProductVendor::class,'product_id');
     }
 
     public function category(): BelongsTo

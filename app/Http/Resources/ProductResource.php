@@ -22,6 +22,7 @@ class ProductResource extends JsonResource
             'category' => CategoryResource::make($this->whenLoaded('category')),
             'vendor' => VendorResource::collection($this->whenLoaded('vendors')),
             'orders' => OrderResource::collection($this->whenLoaded('orders')),
+            'brand' => BrandResource::make($this->whenLoaded('brand')),
         ];
     }
 }

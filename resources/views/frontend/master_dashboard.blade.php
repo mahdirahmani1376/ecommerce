@@ -3,9 +3,6 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 
-@php
-  $seo = App\Models\Seo::find(1);
-@endphp
 <head>
     <meta charset="utf-8" />
     <title> @yield('title')</title>
