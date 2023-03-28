@@ -14,7 +14,7 @@ class OrderResource extends JsonResource
         return [
             'order_id' => $this->order_id,
             'state' => $this->state,
-            'products_vendors' => ProductVendorResource::collection($this->whenLoaded('productsVendors')),
+            'products' => ProductResource::collection($this->whenLoaded('products')),
             'user' => UserResource::make($this->whenLoaded('user')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

@@ -31,14 +31,20 @@ class OrderController extends Controller
     {
 
         $validated = $request->validated();
-        $productsIds = collect($validated['product_vendors'])->pluck('id')->all();
+        $productsIds = collect($validated['products'])->pluck('product_id')->all();
+        $vendorIds = collect($validated['products'])->pluck('vendor_id')->all();
 
-        $productVendors = ProductVendor::findMany($productsIds);
         $order = Order::create([
             'user_id' => auth()->id(),
         ]);
 
-        $order->productsVendors()->sync($productVendors);
+        $productVendors = ProductVendor::where(function (Builder $builder) use ($productsIds,$vendorIds){
+           $builder
+               ->whereIn('product_id',$productsIds)
+               ->whereIn('vendor_id',$vendorIds);
+        })->get();
+
+        $order->products()->sync($productsIds);
 
         $productVendors->each(function (ProductVendor $productVendor){
             $productVendor->update([
@@ -46,7 +52,7 @@ class OrderController extends Controller
             ]);
         });
 
-        return OrderResource::make($order->load('user','productsVendors'));
+        return OrderResource::make($order->load('user','products'));
     }
 
     /**
@@ -63,11 +69,18 @@ class OrderController extends Controller
     public function update(UpdateOrderRequest $request, Order $order)
     {
         $validated = $request->validated();
-        $productsVendorIds = collect($validated['product_vendors'])->pluck('id');
+        $productsIds = collect($validated['products'])->pluck('product_id')->all();
+        $vendorIds = collect($validated['products'])->pluck('vendor_id')->all();
 
-        $order->productsVendors()->sync($productsVendorIds);
+        $productVendors = ProductVendor::where(function (Builder $builder) use ($productsIds,$vendorIds){
+            $builder
+                ->whereIn('product_id',$productsIds)
+                ->whereIn('vendor_id',$vendorIds);
+        })->get();
 
-        return Response::json(OrderResource::make($order->load('user','productsVendors')));
+        $order->products()->sync($productsIds);
+
+        return Response::json(OrderResource::make($order->load('user','products')));
     }
 
     /**
