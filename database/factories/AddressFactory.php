@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,8 @@ class AddressFactory extends Factory
     {
         return [
             'address' => fake()->address,
+            'addressable_type' => User::class,
+            'addressable_id' => User::factory(),
         ];
     }
 }
