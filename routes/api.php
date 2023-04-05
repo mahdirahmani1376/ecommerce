@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,9 +35,14 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::put('/{order}','update')->name('orders.update')->middleware('can:orders.update');
         Route::delete('/{order}','delete')->name('orders.delete')->middleware('can:orders.delete');
     });
+
+    Route::controller(UserController::class)->prefix('/users')->group(function (){
+       Route::get('/wishlist')->name('users.wishlist');
+    });
     Route::controller(ProductController::class)->prefix('/products')->group(function (){
         Route::get('/','index')->name('products.index')->middleware('can:products.view_any');
         Route::get('/{product}','view')->name('products.view')->middleware('can:products.view');
+        Route::get('/{product}/users-wishlist','usersWishList')->name('products.usersWishList')->middleware('can:products.view_any');
         Route::post('/','store')->name('products.store')->middleware('can:products.store');
         Route::put('/{product}','update')->name('products.update')->middleware('can:products.update');
         Route::delete('/{product}','delete')->name('products.delete')->middleware('can:products.delete');

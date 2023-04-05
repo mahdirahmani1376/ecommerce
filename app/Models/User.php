@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -54,6 +55,11 @@ class User extends Authenticatable implements HasMedia
     public function addresses()
     {
         return $this->morphMany(Address::class,'addressable');
+    }
+
+    public function wishlist():BelongsToMany
+    {
+        return $this->belongsToMany(Product::class,'products_users','user_id','product_id');
     }
 
 }

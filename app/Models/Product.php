@@ -52,6 +52,11 @@ class Product extends Model implements HasMedia
         return $this->belongsTo(Brand::class,'product_id');
     }
 
+    public function usersWishlist()
+    {
+        return $this->belongsToMany(User::class,'products_users','product_id','user_id');
+    }
+
     public static function filter(): QueryBuilder
     {
         return QueryBuilder::for(Product::class)

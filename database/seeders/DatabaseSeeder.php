@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Enums\StockEnum;
 use App\Models\Address;
 use App\Models\Brand;
@@ -13,7 +12,6 @@ use App\Models\ProductVendor;
 use App\Models\User;
 use App\Models\Vendor;
 use Database\Factories\ProductFactory;
-use Database\Factories\SeoFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;

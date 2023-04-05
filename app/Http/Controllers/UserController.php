@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Response;
 use Spatie\MediaLibrary\HasMedia;
 
 class UserController extends Controller
@@ -89,5 +91,9 @@ class UserController extends Controller
             'status' => 'password changed successfully',
         ]);
 
+    }
+
+    public function wishlist(){
+        return Response::json(ProductResource::collection(auth()->user()->wishlist));
     }
 }

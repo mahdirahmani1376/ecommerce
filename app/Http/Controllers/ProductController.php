@@ -6,6 +6,7 @@ use App\Http\Requests\StoreproductRequest;
 use App\Http\Requests\UpdateproductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 
@@ -65,6 +66,13 @@ class ProductController extends Controller
         $product->delete();
 
         return Response::json();
+    }
+
+    public function usersWishList(Product $product)
+    {
+        return Response::json(
+            data: $product->usersWishlist
+        );
     }
 
 }
