@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
-use App\Models\Vendor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OrderFactory extends Factory
@@ -36,6 +35,4 @@ class OrderFactory extends Factory
             ];
         });
     }
-
-
 }

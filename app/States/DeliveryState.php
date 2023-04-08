@@ -13,9 +13,8 @@ abstract class DeliveryState extends State
     {
         return parent::config()
             ->default(Delivery::class)
-            ->allowTransition(Delivery::class,Refounded::class)
-            ->allowTransition(Refounded::class,Delivery::class)
-            ->registerState([Delivery::class,Refounded::class])
-            ;
+            ->allowTransition(Delivery::class, Refounded::class)
+            ->allowTransition(Refounded::class, Delivery::class)
+            ->registerState([Delivery::class, Refounded::class]);
     }
 }

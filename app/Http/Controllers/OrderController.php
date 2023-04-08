@@ -6,22 +6,18 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\ProductVendor;
-use App\Models\Vendor;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class OrderController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Response::json(OrderResource::make(Order::with('productsVendors','user')->paginate()));
+        return Response::json(OrderResource::make(Order::with('productsVendors', 'user')->paginate()));
     }
 
     /**
@@ -29,7 +25,6 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-
         $validated = $request->validated();
         $productsIds = collect($validated['products'])->pluck('product_id')->all();
         $vendorIds = collect($validated['products'])->pluck('vendor_id')->all();
@@ -38,21 +33,19 @@ class OrderController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        $productVendors = ProductVendor::where(function (Builder $builder) use ($productsIds,$vendorIds){
-           $builder
-               ->whereIn('product_id',$productsIds)
-               ->whereIn('vendor_id',$vendorIds);
+        $productVendors = ProductVendor::where(function (Builder $builder) use ($productsIds, $vendorIds) {
+            $builder
+                ->whereIn('product_id', $productsIds)
+                ->whereIn('vendor_id', $vendorIds);
         })->get();
 
         $order->products()->sync($productsIds);
 
-        $productVendors->each(function (ProductVendor $productVendor){
-            $productVendor->update([
-                'stock' => --$productVendor->stock
-            ]);
+        $productVendors->each(function (ProductVendor $productVendor) {
+            $this->stockDecrease($productVendor);
         });
 
-        return OrderResource::make($order->load('user','products'));
+        return OrderResource::make($order->load('user', 'products'));
     }
 
     /**
@@ -60,7 +53,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        return Response::json(OrderResource::make($order->with('user','productsVendors')));
+        return Response::json(OrderResource::make($order->with('user', 'productsVendors')));
     }
 
     /**
@@ -72,15 +65,19 @@ class OrderController extends Controller
         $productsIds = collect($validated['products'])->pluck('product_id')->all();
         $vendorIds = collect($validated['products'])->pluck('vendor_id')->all();
 
-        $productVendors = ProductVendor::where(function (Builder $builder) use ($productsIds,$vendorIds){
+        $productVendors = ProductVendor::where(function (Builder $builder) use ($productsIds, $vendorIds) {
             $builder
-                ->whereIn('product_id',$productsIds)
-                ->whereIn('vendor_id',$vendorIds);
+                ->whereIn('product_id', $productsIds)
+                ->whereIn('vendor_id', $vendorIds);
         })->get();
 
         $order->products()->sync($productsIds);
 
-        return Response::json(OrderResource::make($order->load('user','products')));
+        $productVendors->each(function (ProductVendor $productVendor) {
+            $this->stockDecrease($productVendor);
+        });
+
+        return Response::json(OrderResource::make($order->load('user', 'products')));
     }
 
     /**
@@ -88,8 +85,19 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
+        $order->productsVendors()->each(function (ProductVendor $product) {
+            $product->stock++;
+        });
+
         $order->delete();
 
         return Response::json();
+    }
+
+    private function stockDecrease(ProductVendor $productVendor)
+    {
+        $productVendor->update([
+            'stock' => --$productVendor->stock,
+        ]);
     }
 }

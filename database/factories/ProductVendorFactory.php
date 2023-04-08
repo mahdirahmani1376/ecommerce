@@ -17,8 +17,8 @@ class ProductVendorFactory extends Factory
 
             'product_id' => Product::factory(),
             'vendor_id' => Vendor::factory(),
-            'price' => random_int(100,1000),
-            'stock' => random_int(0,50),
+            'price' => random_int(100, 1000),
+            'stock' => random_int(0, 50),
         ];
     }
 }

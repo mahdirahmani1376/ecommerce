@@ -22,6 +22,7 @@
     </head>
     <body class="antialiased">
         <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
+
             @if (Route::has('login'))
                 <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                     @auth
@@ -46,6 +47,9 @@
                 </div>
 
                 <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+                    @if(session('message'))
+                        <p class="alert alert-danger">{{ Session::get('message') }}</p>
+                    @endif
                     <div class="grid grid-cols-1 md:grid-cols-2">
                         <div class="p-6">
                             <div class="flex items-center">
@@ -55,6 +59,7 @@
 
                             <div class="ml-12">
                                 <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
+                                    {{__('lang.Welcome to our website',locale: session('locale') ?? config('app.locale'))}}
                                     Laravel has wonderful, thorough documentation covering every aspect of the framework. Whether you are new to the framework or have previous experience with Laravel, we recommend reading all of the documentation from beginning to end.
                                 </div>
                             </div>

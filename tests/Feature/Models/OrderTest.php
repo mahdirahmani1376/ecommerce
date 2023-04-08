@@ -3,55 +3,42 @@
 namespace Tests\Feature\Models;
 
 use App\Enums\StockEnum;
-use App\Events\LowStockEvent;
 use App\Jobs\LowStockEventJob;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVendor;
 use App\Models\Vendor;
-use App\Notifications\LowStockNotification;
 use App\States\OrderStates\Paid;
 use Bus;
-use DB;
-use Event;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Queue\Jobs\Job;
 use Illuminate\Testing\Fluent\AssertableJson;
-use LaravelIdea\Helper\App\Models\_IH_Order_C;
-use LaravelIdea\Helper\App\Models\_IH_Product_C;
-use LaravelIdea\Helper\App\Models\_IH_ProductVendor_C;
-use LaravelIdea\Helper\App\Models\_IH_Vendor_C;
-use Notification;
-use phpDocumentor\Reflection\Types\Void_;
 use Tests\Feature\BaseTestCase;
-use Tests\TestCase;
 
 class OrderTest extends BaseTestCase
 {
-
     use RefreshDatabase;
 
     private Order $order;
+
     private ProductVendor $productVendor;
+
     private Product $product;
+
     private Vendor $vendor;
+
     private int $stock;
 
-    protected function setUp(): Void
+    protected function setUp(): void
     {
         parent::SetUp();
 
-        $product =Product::factory()->create();
+        $product = Product::factory()->create();
         $vendor = Vendor::factory()->create();
         $stock = StockEnum::LowStockEnum->value;
         $productVendor = ProductVendor::factory()->create([
             'vendor_id' => $vendor->vendor_id,
             'product_id' => $product->product_id,
-            'stock' => $stock
+            'stock' => $stock,
         ]);
         $order = Order::factory()->create([
             'user_id' => $this->superAdmin->id,
@@ -72,7 +59,7 @@ class OrderTest extends BaseTestCase
 
         $order->state->transitionTo(Paid::class);
 
-        $this->assertDatabaseHas('orders',[
+        $this->assertDatabaseHas('orders', [
             'order_id' => $order->order_id,
             'state' => Paid::$name,
         ]);
@@ -82,7 +69,7 @@ class OrderTest extends BaseTestCase
     public function stock_is_created_and_low_stock_email_is_sent()
     {
         Bus::fake([
-            LowStockEventJob::class
+            LowStockEventJob::class,
         ]);
         $user = auth()->user();
         $vendor = $this->vendor;
@@ -98,43 +85,41 @@ class OrderTest extends BaseTestCase
 
         $productVendorUpdateData = ProductVendor::factory(2)->create([
             'vendor_id' => $vendor,
-            'stock' => $stock
+            'stock' => $stock,
         ]);
 
         $data = [
-            'products' =>
-                [
+            'products' => [
                 [
                     'product_id' => $product->product_id,
-                    'vendor_id' => $vendor->vendor_id
+                    'vendor_id' => $vendor->vendor_id,
                 ],
                 [
-                        'product_id' => $product2->product_id,
-                        'vendor_id' => $vendor2->vendor_id
-                ]
+                    'product_id' => $product2->product_id,
+                    'vendor_id' => $vendor2->vendor_id,
+                ],
             ],
         ];
 
-        $response = $this->postJson(route('orders.store',$data));
+        $response = $this->postJson(route('orders.store', $data));
         $response->assertStatus(201);
-        $response->assertJson(fn(AssertableJson $json) => $json
-            ->where('data.user.id',$this->superAdmin->id)
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->where('data.user.id', $this->superAdmin->id)
             ->count('data.products', 2)
             ->etc()
         );
 
-        $this->assertDatabaseHas('orders',[
+        $this->assertDatabaseHas('orders', [
             'user_id' => $user->id,
         ]);
 
         $this->assertDatabaseHas('products_vendors',
-        [
-           'vendor_id' => $vendor->vendor_id,
-           'stock' => --$stock,
-        ]);
+            [
+                'vendor_id' => $vendor->vendor_id,
+                'stock' => --$stock,
+            ]);
 
         Bus::assertDispatched(LowStockEventJob::class);
-
     }
 
     /** @test */
@@ -152,34 +137,32 @@ class OrderTest extends BaseTestCase
             'stock' => 10,
         ]);
         $data = [
-            'products' =>
+            'products' => [
                 [
-                    [
-                        'product_id' => $product->product_id,
-                        'vendor_id' => $vendor->vendor_id
-                    ],
-                    [
-                        'product_id' => $product2->product_id,
-                        'vendor_id' => $vendor2->vendor_id
-                    ]
+                    'product_id' => $product->product_id,
+                    'vendor_id' => $vendor->vendor_id,
                 ],
+                [
+                    'product_id' => $product2->product_id,
+                    'vendor_id' => $vendor2->vendor_id,
+                ],
+            ],
         ];
 
         $order = $this->order;
 
-        $response = $this->putJson(route('order.update', $order),$data);
+        $response = $this->putJson(route('order.update', $order), $data);
         $response->assertStatus(200);
-        $response->assertJson(fn(AssertableJson $json) => $json
-            ->where('order_id',$order->order_id)
-            ->where('user.id',$this->superAdmin->id)
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->where('order_id', $order->order_id)
+            ->where('user.id', $this->superAdmin->id)
             ->has('products')
             ->etc()
         );
 
-        $this->assertDatabaseHas('orders_products',[
+        $this->assertDatabaseHas('orders_products', [
             'order_id' => $order->order_id,
             'product_id' => $product->product_id,
         ]);
     }
-
 }

@@ -14,15 +14,16 @@ class Category extends Model implements HasMedia
     use HasFactory,InteractsWithMedia,HasRoles;
 
     protected $guarded = [];
+
     protected $primaryKey = 'category_id';
 
     public function products()
     {
-        return $this->hasMany(Product::class,'category_id');
+        return $this->hasMany(Product::class, 'category_id');
     }
 
     public function parentCategories(): HasMany
     {
-        return $this->hasMany(Category::class,'parent_category');
+        return $this->hasMany(Category::class, 'parent_category');
     }
 }

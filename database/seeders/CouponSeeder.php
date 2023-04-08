@@ -8,6 +8,5 @@ class CouponSeeder extends Seeder
 {
     public function run()
     {
-
     }
 }

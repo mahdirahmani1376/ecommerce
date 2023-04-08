@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreVendorRequest;
-use App\Http\Requests\UpdateVendorRequest;
-use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -35,7 +32,8 @@ class VendorController extends Controller
     public function profile()
     {
         $adminData = auth()->user();
-        return view('admin.admin_profile_view',compact('adminData'));
+
+        return view('admin.admin_profile_view', compact('adminData'));
     }
 
     public function store(Request $request)
@@ -76,8 +74,7 @@ class VendorController extends Controller
             'old_password' => 'required',
         ]);
 
-        if (! Hash::check($data['old_password'],$user->password))
-        {
+        if (! Hash::check($data['old_password'], $user->password)) {
             return back()->with(['error' => 'old password does not match']);
         }
 
@@ -90,6 +87,5 @@ class VendorController extends Controller
         return back()->with([
             'status' => 'password changed successfully',
         ]);
-
     }
 }

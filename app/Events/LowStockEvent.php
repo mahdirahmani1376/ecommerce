@@ -13,8 +13,7 @@ class LowStockEvent
 
     public function __construct(
         ProductVendor $productVendor
-    )
-    {
+    ) {
         $this->productVendor = $productVendor;
     }
 }

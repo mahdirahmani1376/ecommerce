@@ -11,15 +11,16 @@ class ProductVendor extends Pivot
     use HasFactory;
 
     protected $table = 'products_vendors';
+
     public $incrementing = true;
 
     public function vendor(): BelongsTo
     {
-        return $this->belongsTo(Vendor::class,'vendor_id');
+        return $this->belongsTo(Vendor::class, 'vendor_id');
     }
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class,'product_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }

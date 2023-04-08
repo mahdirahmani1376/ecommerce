@@ -17,31 +17,29 @@ class LowStockNotification extends Notification implements ShouldQueue
 
     public function __construct(
         ProductVendor $productVendor
-    )
-    {
-
+    ) {
         $this->productVendor = $productVendor;
     }
 
     public function via($notifiable): array
     {
-        return ['mail','database'];
+        return ['mail', 'database'];
     }
 
     public function toMail($notifiable): MailMessage
     {
         $product = $this->productVendor->product;
+
         return (new MailMessage)
             ->line('Your product with name:'.$product->name.' has less than'.StockEnum::LowStockEnum->value.'stock available')
-            ->action('Product url:', route('products.view',$product))
-            ->line('Please consider that')
-            ;
+            ->action('Product url:', route('products.view', $product))
+            ->line('Please consider that');
     }
 
     public function toArray($notifiable): array
     {
         return [
-            'productVendor' => $this->productVendor
+            'productVendor' => $this->productVendor,
         ];
     }
 }

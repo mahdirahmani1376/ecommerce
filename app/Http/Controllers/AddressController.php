@@ -27,6 +27,7 @@ class AddressController extends Controller
         $user = auth()->user();
 
         $address = $user->addresses()->create($validated);
+
         return Response::json(AddressResource::make($address->load('addressable')));
     }
 
@@ -50,7 +51,6 @@ class AddressController extends Controller
         $user->addresses()->update($address);
 
         return Response::json(AddressResource::make($address->load('addressable')));
-
     }
 
     /**
@@ -61,7 +61,7 @@ class AddressController extends Controller
         $address->delete();
 
         return Response::json([
-            'message' => 'address removed successfully'
+            'message' => 'address removed successfully',
         ]);
     }
 }

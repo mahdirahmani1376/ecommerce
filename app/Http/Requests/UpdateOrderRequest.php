@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateOrderRequest extends FormRequest
 {
@@ -24,8 +23,8 @@ class UpdateOrderRequest extends FormRequest
     {
         return [
             'products' => ['array'],
-            'products.*.product_id' => ['required','exists:products,product_id'],
-            'products.*.vendor_id' => ['required','exists:vendors,vendor_id'],
+            'products.*.product_id' => ['required', 'exists:products,product_id'],
+            'products.*.vendor_id' => ['required', 'exists:vendors,vendor_id'],
         ];
     }
 }

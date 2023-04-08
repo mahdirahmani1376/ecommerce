@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Spatie\Permission\Models\Role;
-use Tests\Feature\BaseTestCase;
 use Tests\TestCase;
 
 class ApiAuthControllerTest extends TestCase
@@ -22,14 +21,14 @@ class ApiAuthControllerTest extends TestCase
             'email' => 'rahmanimahdi16@gmail.com',
         ]);
         $superAdminRole = Role::create([
-            'name' => config('auth.super_admin_role_name')
+            'name' => config('auth.super_admin_role_name'),
         ]);
         $superAdmin->assignRole($superAdminRole);
 
         $admin = User::factory()->create();
 
         $adminRole = Role::create([
-            'name' => config('auth.admin_role_name')
+            'name' => config('auth.admin_role_name'),
         ]);
         $admin->assignRole($adminRole);
 
@@ -43,12 +42,10 @@ class ApiAuthControllerTest extends TestCase
         $response = $this->actingAs($this->superAdmin)->postJson(route('tokens.create'));
 
         $response->assertStatus(200);
-        $response->assertJson(fn(AssertableJson $json) => $json
+        $response->assertJson(fn (AssertableJson $json) => $json
             ->has('message')
             ->has('token')
             ->etc()
         );
     }
-
-
 }

@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreAdminRequest;
-use App\Http\Requests\UpdateAdminRequest;
-use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,7 +9,6 @@ use Illuminate\Support\Facades\Response;
 
 class AdminController extends Controller
 {
-
     public function dashboard()
     {
         return view('admin.index');
@@ -37,7 +33,8 @@ class AdminController extends Controller
     public function profile()
     {
         $adminData = auth()->user();
-        return view('admin.admin_profile_view',compact('adminData'));
+
+        return view('admin.admin_profile_view', compact('adminData'));
     }
 
     public function store(Request $request)
@@ -75,8 +72,7 @@ class AdminController extends Controller
             'old_password' => 'required',
         ]);
 
-        if (! Hash::check($data['old_password'],$user->password))
-        {
+        if (! Hash::check($data['old_password'], $user->password)) {
             return back()->with(['error' => 'old password does not match']);
         }
 
@@ -89,6 +85,5 @@ class AdminController extends Controller
         return back()->with([
             'status' => 'password changed successfully',
         ]);
-
     }
 }

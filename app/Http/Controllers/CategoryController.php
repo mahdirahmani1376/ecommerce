@@ -6,7 +6,6 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,9 +16,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return Response::json(Category::with('products','parentCategories')->get());
+        return Response::json(Category::with('products', 'parentCategories')->get());
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -29,7 +27,7 @@ class CategoryController extends Controller
         $validated = $request->validated();
         $category = Category::create($validated);
 
-        return Response::json(CategoryResource::make($category->load('products','parentCategories')));
+        return Response::json(CategoryResource::make($category->load('products', 'parentCategories')));
     }
 
     /**
@@ -37,9 +35,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return Response::json(CategoryResource::make($category->load('products','parentCategories')));
+        return Response::json(CategoryResource::make($category->load('products', 'parentCategories')));
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -49,7 +46,7 @@ class CategoryController extends Controller
         $validated = $request->validated();
         Category::update($validated);
 
-        return Response::json(CategoryResource::make($category->load('products','parentCategories')));
+        return Response::json(CategoryResource::make($category->load('products', 'parentCategories')));
     }
 
     /**
@@ -60,7 +57,7 @@ class CategoryController extends Controller
         $category->delete();
 
         return Response::json([
-            'message' => 'Category deleted successfully'
+            'message' => 'Category deleted successfully',
         ]);
     }
 }

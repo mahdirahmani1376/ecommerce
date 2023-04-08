@@ -10,12 +10,13 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Brand extends Model implements HasMedia
 {
     protected $guarded = [];
+
     protected $primaryKey = 'brand_id';
 
     use HasFactory,InteractsWithMedia;
 
     public function products()
     {
-        return $this->hasMany(Product::class,'brand_id');
+        return $this->hasMany(Product::class, 'brand_id');
     }
 }

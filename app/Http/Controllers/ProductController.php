@@ -6,8 +6,6 @@ use App\Http\Requests\StoreproductRequest;
 use App\Http\Requests\UpdateproductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
-use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 
 class ProductController extends Controller
@@ -17,7 +15,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Response::json(ProductResource::collection(Product::Filter()->with(['vendors','category','brand','media'])->paginate()));
+        return Response::json(ProductResource::collection(Product::Filter()->with(['vendors', 'category', 'brand', 'media'])->paginate()));
     }
 
     /**
@@ -29,14 +27,12 @@ class ProductController extends Controller
 
         $product = Product::create($validated);
 
-        if ($validated->image)
-        {
+        if ($validated->image) {
             $image = $validated->image;
             $product->addMedia($image)->toMediaCollection();
         }
 
-        return Response::json(ProductResource::make($product->with('orders','vendors')));
-
+        return Response::json(ProductResource::make($product->with('orders', 'vendors')));
     }
 
     /**
@@ -46,16 +42,14 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
 
-        if ($validated->image)
-        {
+        if ($validated->image) {
             $image = $validated->image;
             $product->addMedia($image)->toMediaCollection();
         }
 
         $product->update($validated);
 
-        return Response::json(ProductResource::make($product->with('orders','vendors')));
-
+        return Response::json(ProductResource::make($product->with('orders', 'vendors')));
     }
 
     /**
@@ -74,5 +68,4 @@ class ProductController extends Controller
             data: $product->usersWishlist
         );
     }
-
 }

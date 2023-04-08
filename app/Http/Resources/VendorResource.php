@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class VendorResource extends JsonResource
 {
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
@@ -20,7 +20,7 @@ class VendorResource extends JsonResource
             'updated_at' => $this->updated_at,
             'media_count' => $this->media_count,
             'products_count' => $this->products_count,
-            'products' => ProductResource::collection($this->whenLoaded('products'))
+            'products' => ProductResource::collection($this->whenLoaded('products')),
         ];
     }
 }

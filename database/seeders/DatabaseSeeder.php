@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\StockEnum;
 use App\Models\Address;
 use App\Models\Brand;
 use App\Models\Category;
@@ -11,7 +10,6 @@ use App\Models\Product;
 use App\Models\ProductVendor;
 use App\Models\User;
 use App\Models\Vendor;
-use Database\Factories\ProductFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -21,6 +19,7 @@ use Spatie\Permission\Models\Role;
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
+
     /**
      * Seed the application's database.
      */
@@ -32,7 +31,7 @@ class DatabaseSeeder extends Seeder
 
         $users = User::factory()->count(20)->create();
         $users->each(function (User $user) {
-           $user->assignRole('user');
+            $user->assignRole('user');
         });
 
         $addresses = Address::factory()->count(30)->create([
@@ -40,8 +39,8 @@ class DatabaseSeeder extends Seeder
             'addressable_id' => $users->random()->id,
         ]);
 
-        $permissions = collect(['delete','store','update','view','viewAny']);
-        $permissions->map(fn($permission) => Permission::create(['name' => $permission]));
+        $permissions = collect(['delete', 'store', 'update', 'view', 'viewAny']);
+        $permissions->map(fn ($permission) => Permission::create(['name' => $permission]));
 
         $mahdi = User::factory()->create([
             'name' => 'mahdi rahmani',
@@ -53,7 +52,7 @@ class DatabaseSeeder extends Seeder
 
         $parentCategories = Category::factory()->count(10)->create();
         $subCategories = Category::factory()->count(30)->create([
-            'parent_category' => $parentCategories->random()->first()->category_id
+            'parent_category' => $parentCategories->random()->first()->category_id,
         ]);
 
         $brands = Brand::factory()->count(20)->create();
@@ -74,7 +73,5 @@ class DatabaseSeeder extends Seeder
         $orders->each(function (Order $order) use ($products) {
             $order->products()->sync($products->random()->first()->product_id);
         });
-
-
     }
 }

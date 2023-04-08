@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreOrderRequest extends FormRequest
 {
@@ -15,7 +14,7 @@ class StoreOrderRequest extends FormRequest
         return true;
     }
 
-/**
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
@@ -24,8 +23,8 @@ class StoreOrderRequest extends FormRequest
     {
         return [
             'products' => ['array'],
-            'products.*.product_id' => ['required','exists:products,product_id'],
-            'products.*.vendor_id' => ['required','exists:vendors,vendor_id'],
+            'products.*.product_id' => ['required', 'exists:products,product_id'],
+            'products.*.vendor_id' => ['required', 'exists:vendors,vendor_id'],
         ];
     }
 }

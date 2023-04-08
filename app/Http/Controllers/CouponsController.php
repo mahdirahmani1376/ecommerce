@@ -9,7 +9,6 @@ class CouponsController extends Controller
 {
     public function index()
     {
-
     }
 
     public function create()

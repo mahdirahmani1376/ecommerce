@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -41,7 +40,7 @@ class ApiAuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($validated)){
+        if (Auth::attempt($validated)) {
             $request->session()->regenerate();
 
             $this->createToken();
@@ -50,7 +49,6 @@ class ApiAuthController extends Controller
         return Response::json([
             'data' => 'the credentials doesn not match our records',
         ]);
-
     }
 
     public function logout(Request $request)
@@ -63,5 +61,4 @@ class ApiAuthController extends Controller
             'data' => 'you have been logged out',
         ]);
     }
-
 }

@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBrandRequest;
-use App\Http\Requests\UpdateBrandRequest;
 use App\Http\Resources\BrandResource;
 use App\Models\Brand;
 use Illuminate\Http\Request;
-use Intervention\Image\Facades\Image;
 use Response;
 
 class BrandController extends Controller
@@ -15,6 +12,7 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::latest()->get();
+
         return Response::json(BrandResource::collection($brands));
     }
 
@@ -25,11 +23,9 @@ class BrandController extends Controller
 
     public function store(Request $request)
     {
-
         $data = $request->except('image');
 
-        if ($request->hasFile('image'))
-        {
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = date('Ymdhis').'_'.$image->getClientOriginalName();
             $data['image'] = $imageName;
@@ -37,11 +33,9 @@ class BrandController extends Controller
             $brand->addMedia($request->file('image'))->toMediaCollection('default');
 
             return $brand;
-        }
-        else{
+        } else {
             $brand = Brand::create($data);
         }
-
 
         $notification = [
             'message' => 'Brand Created Successfully',
@@ -51,12 +45,11 @@ class BrandController extends Controller
         return Response::json(BrandResource::make($brand))->withCookie($notification);
     }
 
-    public function update(Brand $brand,Request $request)
+    public function update(Brand $brand, Request $request)
     {
         $data = $request->except('image');
 
-        if ($request->hasFile('image'))
-        {
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = date('Ymdhis').'_'.$image->getClientOriginalName().$image->getClientOriginalExtension();
             $data['image'] = $imageName;
@@ -77,7 +70,7 @@ class BrandController extends Controller
         $brand->delete();
 
         return Response::json([
-            'message' => 'Brand Deleted Successfully'
+            'message' => 'Brand Deleted Successfully',
         ]);
     }
 }

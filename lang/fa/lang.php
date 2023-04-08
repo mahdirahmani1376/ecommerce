@@ -1,0 +1,5 @@
+<?php
+
+return [
+    "Welcome to our website" => "به سایت ما خوش آمدید"
+];
