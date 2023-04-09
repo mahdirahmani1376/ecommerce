@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->string('discount_percent');
-            $table->integer('discount_price');
-            $table->integer('max_basket_limit');
-            $table->integer('min_basket_limit');
+            $table->integer('discount_percent')->nullable();
+            $table->integer('discount_price')->nullable();
+            $table->integer('max_discount')->nullable();
+            $table->integer('min_basket_limit')->nullable();
             $table->timestamps();
         });
     }

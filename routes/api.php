@@ -2,11 +2,14 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Auth\ApiAuthController;
+use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CouponsController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use Barryvdh\Debugbar\Controllers\BaseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,4 +54,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('order', OrderController::class);
     Route::apiResource('delivery', DeliveryController::class);
+    Route::apiResource('basket', BaseController::class);
+    Route::controller(BasketController::class)->group(function (){
+        Route::post('/add_to_basket','addToBasket')->name('add-to-basket');
+        Route::post('/remove_from_basket','removeFromBasket')->name('remove-from-basket');
+    });
+    Route::apiResource('coupon', CouponsController::class);
+    Route::controller(CouponsController::class)->group(function (){
+       Route::post('/{basket}/apply_coupon','applyCoupon')->name('apply-coupon');
+    });
 });

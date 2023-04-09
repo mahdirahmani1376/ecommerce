@@ -54,6 +54,16 @@ class Product extends Model implements HasMedia
         return $this->belongsToMany(User::class, 'products_users', 'product_id', 'user_id');
     }
 
+    public function coupon()
+    {
+        return $this->morphToMany(Coupon::class,'couponnnable','couponnable','product_id','coupon_id');
+    }
+
+    public function baskets()
+    {
+        return $this->belongsToMany(Basket::class,'baskets_products','product_id','basket_id');
+    }
+
     public static function filter(): QueryBuilder
     {
         return QueryBuilder::for(Product::class)

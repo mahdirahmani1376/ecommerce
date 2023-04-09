@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Basket;
 use App\Models\Coupon;
+use App\Models\Product;
+use App\Models\ProductVendor;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class CouponsController extends Controller
@@ -33,5 +37,11 @@ class CouponsController extends Controller
 
     public function destroy(Coupon $coupon)
     {
+    }
+
+    public function applyCoupon(Basket $basket)
+    {
+
+        $totalValueOfBasketPrice = $basket->products()->pluck('price')->sum();
     }
 }

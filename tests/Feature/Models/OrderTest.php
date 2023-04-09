@@ -4,7 +4,10 @@ namespace Tests\Feature\Models;
 
 use App\Enums\StockEnum;
 use App\Jobs\LowStockEventJob;
+use App\Models\Basket;
+use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\ProductVendor;
 use App\Models\Vendor;
@@ -44,7 +47,11 @@ class OrderTest extends BaseTestCase
             'user_id' => $this->superAdmin->id,
         ]);
 
-        $order->products()->sync($product);
+        $orderProduct = OrderProduct::create([
+            'product_id' => $product->product_id,
+            'vendor_id' => $vendor->vendor_id,
+            'order_id' => $order->order_id,
+        ]);
         $this->order = $order;
         $this->productVendor = $productVendor;
         $this->product = $product;
@@ -109,15 +116,25 @@ class OrderTest extends BaseTestCase
             ->etc()
         );
 
+        $this->assertDatabaseCount('orders_products',3);
+
         $this->assertDatabaseHas('orders', [
             'user_id' => $user->id,
         ]);
 
         $this->assertDatabaseHas('products_vendors',
             [
+                'product_id' => $product->product_id,
                 'vendor_id' => $vendor->vendor_id,
                 'stock' => --$stock,
-            ]);
+            ]
+        );
+        $this->assertDatabaseHas('products_vendors',
+            [
+                'product_id' => $product2->product_id,
+                'vendor_id' => $vendor2->vendor_id,
+            ]
+        );
 
         Bus::assertDispatched(LowStockEventJob::class);
     }
@@ -164,5 +181,76 @@ class OrderTest extends BaseTestCase
             'order_id' => $order->order_id,
             'product_id' => $product->product_id,
         ]);
+    }
+
+    /** @test */
+    public function can_an_order_be_deleted()
+    {
+        $order = Order::factory()->create([
+            'user_id' => $this->superAdmin->id,
+        ]);
+
+        $orderProducts = OrderProduct::create([
+            'vendor_id' => $this->vendor->vendor_id,
+            'product_id' => $this->product->product_id,
+            'order_id' => $order->order_id,
+        ]);
+
+        $this->productVendor->decrement('stock');
+
+        $this->assertDatabaseHas('products_vendors',[
+            'product_id' => $this->product->product_id,
+            'stock' => $this->stock -1
+        ]);
+
+        $response = $this->delete(route('order.destroy',$order));
+
+        $this->assertDatabaseHas('products_vendors',[
+            'product_id' => $this->product->product_id,
+            'stock' => $this->stock
+        ]);
+
+    }
+
+    /** @test */
+    public function can_coupon_be_applied_on_an_order()
+    {
+        $user = auth()->user();
+        $vendor = $this->vendor;
+        $stock = StockEnum::LowStockEnum->value;
+        $product = $this->product;
+        $product2 = Product::factory()->create();
+        $vendor2 = Vendor::factory()->create();
+        $productVendor = ProductVendor::factory()->create([
+            'price' => 2000,
+            'product_id' => $product->product_id,
+            'vendor_id' => $vendor->vendor_id,
+        ]);
+
+        $coupon = Coupon::factory()->create([
+            'discount_percent' => 20,
+            'max_discount' => 300,
+            'min_basket_limit' => 100,
+        ]);
+
+
+        $basket = Basket::factory()->create([
+            'user_id' => $this->superAdmin->id,
+        ]);
+
+        $data = [
+            'products' => [
+                [
+                    'product_id' => $product->product_id,
+                    'vendor_id' => $vendor->vendor_id,
+                ],
+            ],
+        ];
+
+        $responseAddToBasket = $this->postJson(route('add-to-basket'),$data);
+        $responseAddToBasket->assertStatus(200);
+
+        $responseCouponApply = $this->postJson(route('apply-coupon',$basket));
+
     }
 }

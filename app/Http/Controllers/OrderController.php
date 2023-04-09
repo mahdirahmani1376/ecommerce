@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\OrderProduct;
 use App\Models\ProductVendor;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class OrderController extends Controller
@@ -26,24 +29,29 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $request)
     {
         $validated = $request->validated();
-        $productsIds = collect($validated['products'])->pluck('product_id')->all();
-        $vendorIds = collect($validated['products'])->pluck('vendor_id')->all();
 
         $order = Order::create([
             'user_id' => auth()->id(),
         ]);
 
-        $productVendors = ProductVendor::where(function (Builder $builder) use ($productsIds, $vendorIds) {
-            $builder
-                ->whereIn('product_id', $productsIds)
-                ->whereIn('vendor_id', $vendorIds);
-        })->get();
+        foreach ($validated['products'] as $key => $value) {
+            $productVendor = ProductVendor::where(function (Builder $builder) use ($value) {
+                $builder
+                    ->where('product_id', $value['product_id'])
+                    ->where('vendor_id', $value['vendor_id']);
+            });
 
-        $order->products()->sync($productsIds);
+            if ($productVendor->exists()){
+                $productVendor->decrement('stock');
+                $productVendor = $productVendor->first();
+                OrderProduct::create([
+                    'product_id' => $productVendor->product_id,
+                    'vendor_id' => $productVendor->vendor_id,
+                    'order_id' => $order->order_id,
+                ]);
+            }
 
-        $productVendors->each(function (ProductVendor $productVendor) {
-            $this->stockDecrease($productVendor);
-        });
+        }
 
         return OrderResource::make($order->load('user', 'products'));
     }
@@ -53,7 +61,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        return Response::json(OrderResource::make($order->with('user', 'productsVendors')));
+        return Response::json(OrderResource::make($order->with('user', 'products')));
     }
 
     /**
@@ -62,20 +70,25 @@ class OrderController extends Controller
     public function update(UpdateOrderRequest $request, Order $order)
     {
         $validated = $request->validated();
-        $productsIds = collect($validated['products'])->pluck('product_id')->all();
-        $vendorIds = collect($validated['products'])->pluck('vendor_id')->all();
 
-        $productVendors = ProductVendor::where(function (Builder $builder) use ($productsIds, $vendorIds) {
-            $builder
-                ->whereIn('product_id', $productsIds)
-                ->whereIn('vendor_id', $vendorIds);
-        })->get();
+        foreach ($validated['products'] as $key => $value) {
+            $productVendor = ProductVendor::where(function (Builder $builder) use ($value) {
+                $builder
+                    ->where('product_id', $value['product_id'])
+                    ->where('vendor_id', $value['vendor_id']);
+            });
 
-        $order->products()->sync($productsIds);
+            if ($productVendor->exists()){
+                $productVendor->decrement('stock');
+                $productVendor = $productVendor->first();
+                OrderProduct::create([
+                    'product_id' => $productVendor->product_id,
+                    'vendor_id' => $productVendor->vendor_id,
+                    'order_id' => $order->order_id,
+                ]);
+            }
 
-        $productVendors->each(function (ProductVendor $productVendor) {
-            $this->stockDecrease($productVendor);
-        });
+        }
 
         return Response::json(OrderResource::make($order->load('user', 'products')));
     }
@@ -85,19 +98,24 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        $order->productsVendors()->each(function (ProductVendor $product) {
-            $product->stock++;
+        $order->products()->each(function (OrderProduct $orderProduct){
+           ProductVendor::where([
+               'product_id' => $orderProduct->product_id,
+               'vendor_id' => $orderProduct->vendor_id,
+           ])
+               ->increment('stock');
         });
 
         $order->delete();
 
-        return Response::json();
-    }
-
-    private function stockDecrease(ProductVendor $productVendor)
-    {
-        $productVendor->update([
-            'stock' => --$productVendor->stock,
+        return Response::json([
+            'message' => 'Order deleted successfully'
         ]);
     }
+
+    private function applyCoupon(ProductVendor $productVendor,Coupon $coupon)
+    {
+//        $productVendor->price
+    }
+
 }

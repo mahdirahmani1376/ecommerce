@@ -6,6 +6,7 @@ use App\States\OrderState;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\ModelStates\HasStates;
 
@@ -23,14 +24,9 @@ class Order extends Model
         'state' => OrderState::class,
     ];
 
-    public function productsVendors(): BelongsToMany
+    public function products(): HasMany
     {
-        return $this->belongsToMany(ProductVendor::class, 'orders_products', 'order_id', 'product_vendor_id');
-    }
-
-    public function products(): BelongsToMany
-    {
-        return $this->belongsToMany(Product::class, 'orders_products', 'order_id', 'product_id');
+        return $this->hasMany(OrderProduct::class, 'order_id');
     }
 
     public function user()

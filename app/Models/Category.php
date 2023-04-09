@@ -26,4 +26,9 @@ class Category extends Model implements HasMedia
     {
         return $this->hasMany(Category::class, 'parent_category');
     }
+
+    public function coupon()
+    {
+        return $this->morphToMany(Coupon::class,'couponnnable','couponnable','product_id','category_id');
+    }
 }

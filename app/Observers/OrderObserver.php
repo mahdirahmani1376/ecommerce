@@ -9,16 +9,6 @@ class OrderObserver
 {
     public function created(Order $order)
     {
-//        $vendor = $order->vendor;
-//        $order->products->each(function ($product) use ($order,$vendor){
-//            $productVendor = ProductVendor::where([
-//                'vendor_id' => $vendor->vendor_id,
-//                'product_id' => $product->product_id,
-//            ])->first();
-//            $productVendor->update([
-//                'stock' => --$productVendor->stock
-//            ]);
-//        });
     }
 
     public function updated(Order $order)

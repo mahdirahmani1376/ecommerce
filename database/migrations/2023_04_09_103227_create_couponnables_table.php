@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders_products', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('order_id')->index();
-            $table->foreignId('vendor_id')->index();
-            $table->foreignId('product_id')->index();
-            $table->timestamps();
+        Schema::create('couponnables', function (Blueprint $table) {
+            $table->foreignId('coupon_id')->index();
+            $table->morphs('couponnable');
         });
     }
 
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders_products');
+        Schema::dropIfExists('couponnables');
     }
 };
