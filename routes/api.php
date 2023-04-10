@@ -61,6 +61,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::apiResource('coupon', CouponsController::class);
     Route::controller(CouponsController::class)->group(function (){
-       Route::post('/{basket}/apply_coupon','applyCoupon')->name('apply-coupon');
+       Route::post('/{coupon}/apply_coupon','applyCoupon')->name('apply-coupon');
     });
 });

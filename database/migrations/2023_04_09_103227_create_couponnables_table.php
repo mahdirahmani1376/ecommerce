@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('couponnables', function (Blueprint $table) {
             $table->foreignId('coupon_id')->index();
-            $table->morphs('couponnable');
+            $table->morphs('couponnnable');
         });
     }
 

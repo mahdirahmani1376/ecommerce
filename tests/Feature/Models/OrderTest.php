@@ -212,40 +212,4 @@ class OrderTest extends BaseTestCase
 
     }
 
-    /** @test */
-    public function can_coupon_be_applied_on_an_order()
-    {
-        $user = auth()->user();
-        $vendor = $this->vendor;
-        $stock = StockEnum::LowStockEnum->value;
-        $product = $this->product;
-        $product2 = Product::factory()->create();
-        $vendor2 = Vendor::factory()->create();
-        $productVendor = ProductVendor::factory()->create([
-            'price' => 2000,
-            'product_id' => $product->product_id,
-            'vendor_id' => $vendor->vendor_id,
-        ]);
-
-        $coupon = Coupon::factory()->create([
-            'discount_percent' => 20,
-            'max_discount' => 300,
-            'min_basket_limit' => 100,
-        ]);
-
-        $data = [
-            'products' => [
-                [
-                    'product_id' => $product->product_id,
-                    'vendor_id' => $vendor->vendor_id,
-                ],
-            ],
-        ];
-
-        $responseAddToBasket = $this->postJson(route('add-to-basket'),$data);
-        $responseAddToBasket->assertStatus(200);
-
-        $responseCouponApply = $this->postJson(route('apply-coupon',$coupon));
-
-    }
 }

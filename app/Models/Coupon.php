@@ -10,6 +10,7 @@ class Coupon extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $primaryKey = 'coupon_id';
 
     public function product()
     {

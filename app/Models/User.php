@@ -63,7 +63,7 @@ class User extends Authenticatable implements HasMedia
 
     public function coupon()
     {
-        return $this->morphToMany(Coupon::class,'couponnnable','couponnable','product_id','user_id');
+        return $this->morphToMany(Coupon::class,'couponnnable','couponnables','coupon_id','couponnnable_id');
     }
 
     public function basket()

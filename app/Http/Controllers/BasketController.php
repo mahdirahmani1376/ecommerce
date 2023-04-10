@@ -66,4 +66,5 @@ class BasketController extends Controller
             return Response::json($user->basket->load(['productVendors' => ['product']]));
         }
     }
+
 }

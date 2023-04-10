@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('baskets', function (Blueprint $table) {
             $table->id('basket_id');
             $table->foreignId('user_id')->index();
+            $table->integer('total')->nullable();
             $table->timestamps();
         });
     }
