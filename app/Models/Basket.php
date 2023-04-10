@@ -10,9 +10,15 @@ class Basket extends Model
     use HasFactory;
 
     protected $primaryKey = 'basket_id';
+    protected $guarded = [];
 
     public function products()
     {
-        return $this->belongsToMany(Product::class,'baskets_products','basket_id','product_id');
+        return $this->hasMany(BasketProduct::class,'basket_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'basket_id');
     }
 }

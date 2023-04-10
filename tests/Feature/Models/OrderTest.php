@@ -233,11 +233,6 @@ class OrderTest extends BaseTestCase
             'min_basket_limit' => 100,
         ]);
 
-
-        $basket = Basket::factory()->create([
-            'user_id' => $this->superAdmin->id,
-        ]);
-
         $data = [
             'products' => [
                 [
@@ -250,7 +245,7 @@ class OrderTest extends BaseTestCase
         $responseAddToBasket = $this->postJson(route('add-to-basket'),$data);
         $responseAddToBasket->assertStatus(200);
 
-        $responseCouponApply = $this->postJson(route('apply-coupon',$basket));
+        $responseCouponApply = $this->postJson(route('apply-coupon',$coupon));
 
     }
 }

@@ -19,14 +19,10 @@ class BasketController extends Controller
     public function addToBasket(AddToBasketRequest $addToBasketRequest)
     {
         $user = auth()->user();
-        if ($user->has('basket')){
-            $basket = $user->basket;
-        }
-        else{
-            $basket = Basket::create([
-                'user_id' => $user->id,
-            ]);
-        }
+
+        $basket = Basket::updateOrCreate([
+            'user_id' => $user->id,
+        ]);
 
         $validated = $addToBasketRequest->validated();
 
@@ -53,7 +49,7 @@ class BasketController extends Controller
 
         }
 
-        return Response::json($user->basket->load('products'));
+        return Response::json($basket->load('products'));
     }
 
     public function removeFromBasket(ProductVendor $productVendor)
