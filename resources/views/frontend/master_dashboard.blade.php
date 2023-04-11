@@ -922,7 +922,7 @@ function wishlistRemove(id){
 </script>
  <!--  // End Load MY Cart // -->
 
-  <!--  ////////////// Start Apply Coupon ////////////// -->
+  <!--  ////////////// Start Apply Voucher ////////////// -->
 <script type="text/javascript">
 
   function applyCoupon(){
@@ -1053,10 +1053,10 @@ function wishlistRemove(id){
 
 </script>
 
-   <!--  ////////////// End Apply Coupon ////////////// -->
+   <!--  ////////////// End Apply Voucher ////////////// -->
 
 <script type="text/javascript">
-    // Coupon Remove Start
+    // Voucher Remove Start
   function couponRemove(){
             $.ajax({
                 type: "GET",
@@ -1098,7 +1098,7 @@ function wishlistRemove(id){
                 }
             })
         }
-// Coupon Remove End
+// Voucher Remove End
 
 </script>
 

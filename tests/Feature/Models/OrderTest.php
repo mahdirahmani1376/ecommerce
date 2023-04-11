@@ -5,7 +5,7 @@ namespace Tests\Feature\Models;
 use App\Enums\StockEnum;
 use App\Jobs\LowStockEventJob;
 use App\Models\Basket;
-use App\Models\Coupon;
+use App\Models\Voucher;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;

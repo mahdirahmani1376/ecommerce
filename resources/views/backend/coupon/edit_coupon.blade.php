@@ -3,7 +3,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<div class="page-content"> 
+<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
 					<div class="breadcrumb-title pe-3">Edit Coupon </div>
@@ -17,22 +17,22 @@
 						</nav>
 					</div>
 					<div class="ms-auto">
-				 
+
 					</div>
 				</div>
 				<!--end breadcrumb-->
 				<div class="container">
 					<div class="main-body">
 						<div class="row">
-							 
+
 <div class="col-lg-10">
 	<div class="card">
 		<div class="card-body">
 
  <form id="myForm" method="post" action="{{ route('update.coupon') }}"   >
 			@csrf
-		 
-		<input type="hidden" name="id" value="{{ $coupon->id }}">	
+
+		<input type="hidden" name="id" value="{{ $coupon->id }}">
 
 			   <div class="row mb-3">
 				<div class="col-sm-3">
@@ -42,7 +42,7 @@
 	 <input type="text" name="coupon_name" class="form-control" value="{{ $coupon->coupon_name }}"  />
 				</div>
 			</div>
- 
+
            <div class="row mb-3">
 				<div class="col-sm-3">
 					<h6 class="mb-0">Coupon Discount(%)</h6>
@@ -60,7 +60,7 @@
 			<input type="date" name="coupon_validity" class="form-control" min="{{ Carbon\Carbon::now()->format('Y-m-d') }}"  value="{{ $coupon->coupon_validity }}"  />
 		</div>
 	</div>
-	  
+
 
 
 
@@ -77,7 +77,7 @@
 
 
 	</div>
-	 
+
 
 
 
@@ -99,17 +99,17 @@
                 },
                  coupon_discount: {
                     required : true,
-                }, 
+                },
             },
             messages :{
                 coupon_name: {
-                    required : 'Please Enter Coupon Name',
+                    required : 'Please Enter Voucher Name',
                 },
                 coupon_discount: {
-                    required : 'Please Enter Coupon Discount',
+                    required : 'Please Enter Voucher Discount',
                 },
             },
-            errorElement : 'span', 
+            errorElement : 'span',
             errorPlacement: function (error,element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
@@ -122,12 +122,12 @@
             },
         });
     });
-    
+
 </script>
 
 
 
- 
+
 
 
 @endsection

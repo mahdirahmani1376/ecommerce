@@ -56,7 +56,7 @@ class Product extends Model implements HasMedia
 
     public function coupon()
     {
-        return $this->morphToMany(Coupon::class,'couponnnable','couponnable','product_id','coupon_id');
+        return $this->morphToMany(Voucher::class,'couponnnable','couponnable','product_id','coupon_id');
     }
 
     public function baskets()

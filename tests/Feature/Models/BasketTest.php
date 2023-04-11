@@ -3,7 +3,7 @@
 namespace Tests\Feature\Models;
 
 use App\Enums\StockEnum;
-use App\Models\Coupon;
+use App\Models\Voucher;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
@@ -70,7 +70,7 @@ class BasketTest extends BaseTestCase
             'vendor_id' => $vendor->vendor_id,
         ]);
 
-        $coupon = Coupon::factory()->create([
+        $coupon = Voucher::factory()->create([
             'discount_percent' => 20,
             'max_discount' => 300,
             'min_basket_limit' => 100,
@@ -90,8 +90,17 @@ class BasketTest extends BaseTestCase
         $responseAddToBasket = $this->postJson(route('add-to-basket'),$data);
         $responseAddToBasket->assertStatus(200);
 
+        $basket = $user->basket;
+        $productsPriceArray = $basket->getTotalValueOfBasket();
+        $sumOfProductsPrices = array_sum($productsPriceArray);
+
         $responseCouponApply = $this->postJson(route('apply-coupon',$coupon));
 
+
+        $this->assertDatabaseHas('baskets',[
+            'user_id' => $this->superAdmin->id,
+            'total' =>   $sumOfProductsPrices - 300
+        ]);
 
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
-use App\Models\Coupon;
+use App\Models\Voucher;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\ProductVendor;
@@ -113,7 +113,7 @@ class OrderController extends Controller
         ]);
     }
 
-    private function applyCoupon(ProductVendor $productVendor,Coupon $coupon)
+    private function applyCoupon(ProductVendor $productVendor, Voucher $coupon)
     {
 //        $productVendor->price
     }

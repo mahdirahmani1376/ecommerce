@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Basket;
 use App\Models\BasketProduct;
-use App\Models\Coupon;
+use App\Models\Voucher;
 use App\Models\Product;
 use App\Models\ProductVendor;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,23 +28,23 @@ class CouponsController extends Controller
     {
     }
 
-    public function show(Coupon $coupon)
+    public function show(Voucher $coupon)
     {
     }
 
-    public function edit(Coupon $coupon)
+    public function edit(Voucher $coupon)
     {
     }
 
-    public function update(Request $request, Coupon $coupon)
+    public function update(Request $request, Voucher $coupon)
     {
     }
 
-    public function destroy(Coupon $coupon)
+    public function destroy(Voucher $coupon)
     {
     }
 
-    public function applyCoupon(Coupon $coupon)
+    public function applyCoupon(Voucher $coupon)
     {
         $basket = auth()->user()->basket;
 
@@ -67,11 +68,13 @@ class CouponsController extends Controller
             $discountedPrice = (100 - $discountPercent) * $sumOfProductsPrices * 100;
 
         $max_discount = $coupon->max_discount;
+
         if($discountedPrice > $max_discount){
-            $discountedPrice = $max_discount;
+            $discountedPrice = $sumOfProductsPrices - $max_discount;
+        }
 
             return $this->applyDiscount($basket,$coupon, $discountedPrice);
-        }
+
         }
         elseif(!is_null($discountAmount)) {
             $discountedPrice = $sumOfProductsPrices - $discountAmount;
@@ -87,9 +90,10 @@ class CouponsController extends Controller
      * @param $discountedPrice
      * @return JsonResponse
      */
-    public function applyDiscount(Basket $basket,Coupon $coupon ,int $discountedPrice): JsonResponse
+    public function applyDiscount(Basket $basket, Voucher $coupon , int $discountedPrice): JsonResponse
     {
-        if (!$coupon->used)
+        $now = Carbon::now();
+        if (!$coupon->used && $now->lte($coupon->expire_date))
         {
         $basket->update([
             'total' => $discountedPrice
