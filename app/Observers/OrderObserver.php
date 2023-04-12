@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Models\Order;
-use App\Models\ProductVendor;
 
 class OrderObserver
 {

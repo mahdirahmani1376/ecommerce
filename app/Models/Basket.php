@@ -10,33 +10,21 @@ class Basket extends Model
     use HasFactory;
 
     protected $primaryKey = 'basket_id';
+
     protected $guarded = [];
 
-    public function products()
+    public function variationVendor()
     {
-        return $this->hasMany(BasketProduct::class,'basket_id');
+        return $this->belongsToMany(VariationVendor::class, 'baskets_variations', 'basket_id', 'variation_vendor_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class,'basket_id');
+        return $this->belongsTo(User::class, 'basket_id');
     }
 
-    /**
-     * @return array
-     */
-    public function getTotalValueOfBasket(): array
+    public function getTotalValueOfBasket()
     {
-        $productsPriceArray = [];
-        $priceOfProducts = $this->products()->each(function (BasketProduct $basketProduct) use (&$productsPriceArray) {
-            $productVendor = ProductVendor::where([
-                'product_id' => $basketProduct->product_id,
-                'vendor_id' => $basketProduct->vendor_id,
-            ])->first();
-            if ($productVendor->exists()) {
-                $productsPriceArray[] = $productVendor->price;
-            }
-        });
-        return $productsPriceArray;
+        return $this->variationVendor()->sum('price');
     }
 }

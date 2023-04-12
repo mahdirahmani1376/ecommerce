@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Events\LowStockEvent;
 use App\Listeners\LowStockListener;
+use App\Models\Basket;
 use App\Models\Order;
 use App\Models\ProductVendor;
+use App\Observers\BasketObserver;
 use App\Observers\OrderObserver;
 use App\Observers\ProductVendorObserver;
 use Illuminate\Auth\Events\Registered;
@@ -35,6 +37,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         Order::class => [
             OrderObserver::class,
+        ],
+        Basket::class => [
+            BasketObserver::class
         ],
     ];
 

@@ -12,5 +12,4 @@ class OrderProduct extends Pivot
     {
         return $this->belongsTo(Order::class, 'product_id');
     }
-
 }

@@ -27,6 +27,8 @@ class User extends Authenticatable implements HasMedia
         'password',
     ];
 
+    protected $primaryKey = 'user_id';
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -61,13 +63,13 @@ class User extends Authenticatable implements HasMedia
         return $this->belongsToMany(Product::class, 'products_users', 'user_id', 'product_id');
     }
 
-    public function coupon()
+    public function voucher()
     {
-        return $this->morphToMany(Voucher::class,'couponnnable','couponnables','coupon_id','couponnnable_id');
+        return $this->belongsToMany(Voucher::class, 'users_vouchers', 'user_id', 'voucher_id');
     }
 
     public function basket()
     {
-        return $this->hasOne(Basket::class,'user_id');
+        return $this->hasOne(Basket::class, 'user_id');
     }
 }

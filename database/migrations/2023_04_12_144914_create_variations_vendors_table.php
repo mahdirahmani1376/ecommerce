@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('baskets', function (Blueprint $table) {
-            $table->id('basket_id');
-            $table->foreignId('user_id')->index();
-            $table->integer('total')->default(0);
-            $table->integer('discount_amount')->nullable();
+        Schema::create('variations_vendors', function (Blueprint $table) {
+            $table->id('variation_vendor_id');
+            $table->foreignId('variation_id');
+            $table->foreignId('vendor_id');
+            $table->integer('price');
             $table->integer('discounted_price')->nullable();
+            $table->integer('stock')->default(0);
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('baskets');
+        Schema::dropIfExists('product_variations');
     }
 };

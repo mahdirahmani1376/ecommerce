@@ -29,6 +29,6 @@ class Category extends Model implements HasMedia
 
     public function coupon()
     {
-        return $this->morphToMany(Voucher::class,'couponnnable','couponnable','product_id','category_id');
+        return $this->morphToMany(Voucher::class, 'couponnnable', 'couponnable', 'product_id', 'category_id');
     }
 }

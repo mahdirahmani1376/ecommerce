@@ -4,8 +4,6 @@ namespace Tests\Feature\Models;
 
 use App\Enums\StockEnum;
 use App\Jobs\LowStockEventJob;
-use App\Models\Basket;
-use App\Models\Voucher;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
@@ -116,7 +114,7 @@ class OrderTest extends BaseTestCase
             ->etc()
         );
 
-        $this->assertDatabaseCount('orders_products',3);
+        $this->assertDatabaseCount('orders_products', 3);
 
         $this->assertDatabaseHas('orders', [
             'user_id' => $user->id,
@@ -198,18 +196,17 @@ class OrderTest extends BaseTestCase
 
         $this->productVendor->decrement('stock');
 
-        $this->assertDatabaseHas('products_vendors',[
+        $this->assertDatabaseHas('products_vendors', [
             'product_id' => $this->product->product_id,
-            'stock' => $this->stock -1
+            'stock' => $this->stock - 1,
         ]);
 
-        $response = $this->delete(route('order.destroy',$order));
+        $response = $this->delete(route('order.destroy', $order));
 
-        $this->assertDatabaseHas('products_vendors',[
+        $this->assertDatabaseHas('products_vendors', [
             'product_id' => $this->product->product_id,
-            'stock' => $this->stock
+            'stock' => $this->stock,
         ]);
 
     }
-
 }

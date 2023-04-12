@@ -10,7 +10,6 @@ class BasketProduct extends Pivot
 
     public function product()
     {
-        return $this->belongsTo(BasketProduct::class,'product_id');
+        return $this->belongsTo(BasketProduct::class, 'product_id');
     }
-
 }

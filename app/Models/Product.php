@@ -27,6 +27,11 @@ class Product extends Model implements HasMedia
     {
     }
 
+    public function variations(): HasMany
+    {
+        return $this->hasMany(Variation::class, 'variation_id');
+    }
+
     public function vendors(): BelongsToMany
     {
         return $this->belongsToMany(Vendor::class, 'products_vendors', 'product_id', 'vendor_id')
@@ -56,12 +61,12 @@ class Product extends Model implements HasMedia
 
     public function coupon()
     {
-        return $this->morphToMany(Voucher::class,'couponnnable','couponnable','product_id','coupon_id');
+        return $this->morphToMany(Voucher::class, 'couponnnable', 'couponnable', 'product_id', 'coupon_id');
     }
 
     public function baskets()
     {
-        return $this->belongsToMany(Basket::class,'baskets_products','product_id','basket_id');
+        return $this->belongsToMany(Basket::class, 'baskets_products', 'product_id', 'basket_id');
     }
 
     public static function filter(): QueryBuilder
@@ -70,8 +75,7 @@ class Product extends Model implements HasMedia
             ->allowedFilters([
                 AllowedFilter::exact('category_id'),
                 AllowedFilter::partial('name'),
-            ])
+            ]);
 //            ->allowedIncludes('category','vendors','orders')
-;
     }
 }

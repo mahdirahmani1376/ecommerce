@@ -1,5 +1,5 @@
 <?php
 
 return [
-    "Welcome to our website" => "به سایت ما خوش آمدید"
+    'Welcome to our website' => 'به سایت ما خوش آمدید',
 ];

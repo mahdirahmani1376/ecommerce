@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
-use App\Models\Voucher;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\ProductVendor;
+use App\Models\Voucher;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class OrderController extends Controller
@@ -41,7 +40,7 @@ class OrderController extends Controller
                     ->where('vendor_id', $value['vendor_id']);
             });
 
-            if ($productVendor->exists()){
+            if ($productVendor->exists()) {
                 $productVendor->decrement('stock');
                 $productVendor = $productVendor->first();
                 OrderProduct::create([
@@ -78,7 +77,7 @@ class OrderController extends Controller
                     ->where('vendor_id', $value['vendor_id']);
             });
 
-            if ($productVendor->exists()){
+            if ($productVendor->exists()) {
                 $productVendor->decrement('stock');
                 $productVendor = $productVendor->first();
                 OrderProduct::create([
@@ -98,7 +97,7 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        $order->products()->each(function (OrderProduct $orderProduct){
+        $order->products()->each(function (OrderProduct $orderProduct) {
            ProductVendor::where([
                'product_id' => $orderProduct->product_id,
                'vendor_id' => $orderProduct->vendor_id,
@@ -109,7 +108,7 @@ class OrderController extends Controller
         $order->delete();
 
         return Response::json([
-            'message' => 'Order deleted successfully'
+            'message' => 'Order deleted successfully',
         ]);
     }
 
@@ -117,5 +116,4 @@ class OrderController extends Controller
     {
 //        $productVendor->price
     }
-
 }

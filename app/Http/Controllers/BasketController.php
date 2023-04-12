@@ -2,21 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AddToBasketRequest;
-use App\Http\Resources\OrderResource;
 use App\Models\Basket;
-use App\Models\BasketProduct;
-use App\Models\Order;
-use App\Models\OrderProduct;
-use App\Models\ProductVendor;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
+use App\Models\VariationVendor;
 use Illuminate\Support\Facades\Response;
 
 class BasketController extends Controller
 {
-    public function addToBasket(AddToBasketRequest $addToBasketRequest)
+    public function addToBasket(VariationVendor $variationVendor)
     {
         $user = auth()->user();
 
@@ -24,47 +16,20 @@ class BasketController extends Controller
             'user_id' => $user->id,
         ]);
 
-        $validated = $addToBasketRequest->validated();
+        $basket->variationVendor()->attach($variationVendor);
+        $variationVendor->stock--;
 
-        $order = Order::create([
-            'user_id' => auth()->id(),
-        ]);
-
-        foreach ($validated['products'] as $key => $value) {
-            $productVendor = ProductVendor::where(function (Builder $builder) use ($value) {
-                $builder
-                    ->where('product_id', $value['product_id'])
-                    ->where('vendor_id', $value['vendor_id']);
-            });
-
-            if ($productVendor->exists()){
-                $productVendor->decrement('stock');
-                $productVendor = $productVendor->first();
-                BasketProduct::create([
-                    'product_id' => $productVendor->product_id,
-                    'vendor_id' => $productVendor->vendor_id,
-                    'basket_id' => $basket->basket_id,
-                ]);
-            }
-
-        }
-
-        return Response::json($basket->load('products'));
+        return Response::json($basket->load('variationVendor'));
     }
 
-    public function removeFromBasket(ProductVendor $productVendor)
+    public function removeFromBasket(VariationVendor $variationVendor)
     {
-        $user = auth()->user();
-        if ($user->has('basket'))
-        {
-            $user->basket()->productVendors()->dettach($productVendor);
-            return Response::json($user->basket->load(['productVendors' => ['product']]));
-        }
-        else{
-            $basket = $user->basket()->create();
-            $basket->dettach($productVendor);
-            return Response::json($user->basket->load(['productVendors' => ['product']]));
-        }
-    }
+        $basket = auth()->user()->basket;
 
+        $basket->variationVendor()->dettach($variationVendor);
+        $variationVendor->stock++;
+
+        return Response::json($basket->load('variationVendor'));
+
+    }
 }
