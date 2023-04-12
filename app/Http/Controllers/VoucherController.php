@@ -85,7 +85,7 @@ class VoucherController extends Controller
                 'used' => true
             ]);
 
-            return $this->applyDiscount($basket, $discountedPrice,$discount_amount);
+            return $this->applyDiscount($basket, $discountedPrice,$discountAmount);
 
         }
         else{
@@ -110,7 +110,7 @@ class VoucherController extends Controller
                 'used' => !($remainingDiscount > 0),
             ]);
 
-            return $this->applyDiscount($basket, $discountedPrice,$discount_amount);
+            return $this->applyDiscount($basket, $discountedPrice,$discountAmount);
         }
         else{
             return Response::json(
@@ -120,11 +120,11 @@ class VoucherController extends Controller
         }
     }
 
-    public function applyDiscount(Basket $basket , int $discountedPrice, int $discount_amount): JsonResponse
+    public function applyDiscount(Basket $basket , int $discountedPrice, int $discountAmount): JsonResponse
     {
         $basket->update([
             'discounted_price' => $discountedPrice,
-            'discount_amount' => $discount_amount,
+            'discount_amount' => $discountAmount,
         ]);
 
         return Response::json(
