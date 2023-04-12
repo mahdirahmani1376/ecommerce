@@ -4,16 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Enums\VoucherEnum;
 use App\Models\Basket;
-use App\Models\BasketProduct;
-use App\Models\User;
 use App\Models\Voucher;
-use App\Models\Product;
-use App\Models\ProductVendor;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class VoucherController extends Controller
@@ -49,27 +43,26 @@ class VoucherController extends Controller
     public function applyVoucher(Voucher $voucher)
     {
         $basket = auth()->user()->basket;
-        if ($voucher->voucher_enum === VoucherEnum::coupon->value){
-            return $this->applyCoupon($voucher,$basket);
-        }
-        elseif ($voucher->voucher_enum === VoucherEnum::giftCard->value){
-            return $this->applyGiftCard($voucher,$basket);
+        if ($voucher->voucher_enum === VoucherEnum::coupon->value) {
+            return $this->applyCoupon($voucher, $basket);
+        } elseif ($voucher->voucher_enum === VoucherEnum::giftCard->value) {
+            return $this->applyGiftCard($voucher, $basket);
         }
     }
 
-    public function applyCoupon(Voucher $voucher,Basket $basket)
+    public function applyCoupon(Voucher $voucher, Basket $basket)
     {
         $now = Carbon::now();
-        if (!$voucher->used && $now->lte($voucher->expire_date)) {
+        if (! $voucher->used && $now->lte($voucher->expire_date)) {
             $discountPercent = $voucher->discount_percent;
             $sumOfProductsPrices = $basket->getTotalValueOfBasket();
             $min_basket_limit = $voucher->min_basket_limit;
             $max_discount = $voucher->max_discount;
 
-            if (!$sumOfProductsPrices >= $min_basket_limit) {
+            if (! $sumOfProductsPrices >= $min_basket_limit) {
                 return Response::json(
                     data: [
-                        'message' => 'the sum of products must be greater than' . $min_basket_limit,
+                        'message' => 'the sum of products must be greater than'.$min_basket_limit,
                     ]
                 );
             }
@@ -77,18 +70,17 @@ class VoucherController extends Controller
             $discountAmount = (100 - $discountPercent) * $sumOfProductsPrices / 100;
             if ($discountAmount > $max_discount) {
                 $discountedPrice = $sumOfProductsPrices - $max_discount;
-            }else {
+            } else {
                 $discountedPrice = $sumOfProductsPrices - $discountAmount;
                 }
 
             $voucher->update([
-                'used' => true
+                'used' => true,
             ]);
 
-            return $this->applyDiscount($basket, $discountedPrice,$discountAmount);
+            return $this->applyDiscount($basket, $discountedPrice, $discountAmount);
 
-        }
-        else{
+        } else {
             return Response::json(
                 data: [
                     'message' => 'this voucher is already used or it is expired',
@@ -96,9 +88,10 @@ class VoucherController extends Controller
         }
     }
 
-    public function applyGiftCard(Voucher $voucher,Basket $basket){
+    public function applyGiftCard(Voucher $voucher, Basket $basket)
+    {
         $now = Carbon::now();
-        if (!$voucher->used && $now->lte($voucher->expire_date)) {
+        if (! $voucher->used && $now->lte($voucher->expire_date)) {
             $discountAmount = $voucher->discount_price;
             $sumOfProductsPrices = $basket->getTotalValueOfBasket();
             $discountedPrice = $sumOfProductsPrices - $discountAmount;
@@ -107,12 +100,11 @@ class VoucherController extends Controller
 
             $voucher->update([
                 'discount_price' => $remainingDiscount,
-                'used' => !($remainingDiscount > 0),
+                'used' => ! ($remainingDiscount > 0),
             ]);
 
-            return $this->applyDiscount($basket, $discountedPrice,$discountAmount);
-        }
-        else{
+            return $this->applyDiscount($basket, $discountedPrice, $discountAmount);
+        } else {
             return Response::json(
                 data: [
                     'message' => 'this voucher is already used or it is expired',
@@ -120,7 +112,7 @@ class VoucherController extends Controller
         }
     }
 
-    public function applyDiscount(Basket $basket , int $discountedPrice, int $discountAmount): JsonResponse
+    public function applyDiscount(Basket $basket, int $discountedPrice, int $discountAmount): JsonResponse
     {
         $basket->update([
             'discounted_price' => $discountedPrice,
@@ -131,5 +123,4 @@ class VoucherController extends Controller
             data: $basket
         );
     }
-
 }

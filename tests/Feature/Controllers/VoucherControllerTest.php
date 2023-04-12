@@ -4,15 +4,12 @@ namespace Tests\Feature\Controllers;
 
 use App\Enums\StockEnum;
 use App\Models\Basket;
-use App\Models\Order;
 use App\Models\Product;
-use App\Models\ProductVendor;
 use App\Models\Variation;
 use App\Models\VariationVendor;
 use App\Models\Vendor;
 use App\Models\Voucher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\Feature\BaseTestCase;
 
 class VoucherControllerTest extends BaseTestCase
@@ -45,7 +42,7 @@ class VoucherControllerTest extends BaseTestCase
             ]);
 
         $basket->variationVendor()->attach($variationVendor);
-        $basket->total = $basket->getTotalValueOfBasket();;
+        $basket->total = $basket->getTotalValueOfBasket();
 
         $voucher = Voucher::factory()->asCoupon()->create([
             'min_basket_limit' => 20,
@@ -55,9 +52,9 @@ class VoucherControllerTest extends BaseTestCase
 
         $responseCouponApply = $this->postJson(route('apply-voucher', $voucher));
 
-        $this->assertDatabaseHas('baskets',[
+        $this->assertDatabaseHas('baskets', [
             'user_id' => $this->superAdmin->user_id,
-            'discount_amount' =>   $basket->discount_amount,
+            'discount_amount' => $basket->discount_amount,
         ]);
 
     }

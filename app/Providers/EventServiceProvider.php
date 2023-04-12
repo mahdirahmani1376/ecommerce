@@ -39,7 +39,7 @@ class EventServiceProvider extends ServiceProvider
             OrderObserver::class,
         ],
         Basket::class => [
-            BasketObserver::class
+            BasketObserver::class,
         ],
     ];
 

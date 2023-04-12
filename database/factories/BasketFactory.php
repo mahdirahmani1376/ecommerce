@@ -16,5 +16,4 @@ class BasketFactory extends Factory
             'user_id' => User::factory(),
         ];
     }
-
 }

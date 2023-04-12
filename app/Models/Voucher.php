@@ -12,5 +12,4 @@ class Voucher extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'voucher_id';
-
 }
