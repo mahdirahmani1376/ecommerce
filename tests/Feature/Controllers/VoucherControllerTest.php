@@ -4,6 +4,7 @@ namespace Tests\Feature\Controllers;
 
 use App\Enums\StockEnum;
 use App\Models\Basket;
+use App\Models\BasketVariationVendor;
 use App\Models\Product;
 use App\Models\Variation;
 use App\Models\VariationVendor;
@@ -27,11 +28,17 @@ class VoucherControllerTest extends BaseTestCase
     {
         $product = Product::factory()->create();
         $vendor = Vendor::factory()->create();
-        $stock = StockEnum::LowStockEnum->value;
+        $stock = 10;
         $variation = Variation::factory()->for($product)->create();
 
         $variationVendor = VariationVendor::factory()->create([
             'price' => 2000,
+            'vendor_id' => $vendor->vendor_id,
+            'stock' => $stock,
+            'variation_id' => $variation->variation_id,
+        ]);
+        $variationVendor2 = VariationVendor::factory()->create([
+            'price' => 4000,
             'vendor_id' => $vendor->vendor_id,
             'stock' => $stock,
             'variation_id' => $variation->variation_id,
@@ -41,7 +48,10 @@ class VoucherControllerTest extends BaseTestCase
                 'user_id' => $this->superAdmin->user_id,
             ]);
 
-        $basket->variationVendor()->attach($variationVendor);
+        BasketVariationVendor::factory()->forBasket($basket)->forVariationVendor($variationVendor)->count(4)->create();
+        BasketVariationVendor::factory()->forBasket($basket)->forVariationVendor($variationVendor2)->count(2)->create();
+
+
         $basket->total = $basket->getTotalValueOfBasket();
 
         $voucher = Voucher::factory()->asCoupon()->create([

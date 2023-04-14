@@ -3,7 +3,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<div class="page-content"> 
+<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
 					<div class="breadcrumb-title pe-3">Edit Admin User </div>
@@ -17,21 +17,21 @@
 						</nav>
 					</div>
 					<div class="ms-auto">
-				 
+
 					</div>
 				</div>
 				<!--end breadcrumb-->
 				<div class="container">
 					<div class="main-body">
 						<div class="row">
-							 
+
 <div class="col-lg-8">
 	<div class="card">
 		<div class="card-body">
 
-		<form method="post" action="{{ route('admin.user.update',$user->id) }}"  >
+		<form method="post" action="{{ route('admin.user.update',$user->user_id) }}"  >
 			@csrf
-		
+
 			<div class="row mb-3">
 				<div class="col-sm-3">
 					<h6 class="mb-0">User Name</h6>
@@ -75,7 +75,7 @@
 				</div>
 			</div>
 
-			 
+
 
 			<div class="row mb-3">
 				<div class="col-sm-3">
@@ -92,8 +92,8 @@
 				</div>
 			</div>
 
-		 
- 
+
+
 
 			<div class="row">
 				<div class="col-sm-3"></div>
@@ -108,7 +108,7 @@
 
 
 	</div>
-	 
+
 
 
 
@@ -120,7 +120,7 @@
 
 
 
- 
+
 
 
 

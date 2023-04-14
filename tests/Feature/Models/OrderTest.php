@@ -117,7 +117,7 @@ class OrderTest extends BaseTestCase
         $this->assertDatabaseCount('orders_products', 3);
 
         $this->assertDatabaseHas('orders', [
-            'user_id' => $user->id,
+            'user_id' => $user->user_id,
         ]);
 
         $this->assertDatabaseHas('products_vendors',

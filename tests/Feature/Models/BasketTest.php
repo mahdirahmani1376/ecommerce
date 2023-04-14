@@ -46,7 +46,7 @@ class BasketTest extends BaseTestCase
     /** @test */
     public function can_a_product_be_added_to_a_basket()
     {
-        $user = auth()->user();
+        $user = $this->superAdmin;
         $vendor = $this->vendor;
         $product = $this->product;
         $stock = $this->stock;

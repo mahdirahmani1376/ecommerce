@@ -22,7 +22,7 @@ class OrderFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($user) {
             return [
-                'user_id' => $user->id,
+                'user_id' => $user->user_id,
             ];
         });
     }

@@ -35,7 +35,7 @@ class ProductTest extends BaseTestCase
 
         $user = $this->superAdmin;
         $order = Order::factory()->create([
-            'user_id' => $user->id,
+            'user_id' => $user->user_id,
         ]);
 
         $response = $this->getJson(route('products.index', [

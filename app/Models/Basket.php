@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Basket extends Model
 {
@@ -13,18 +14,18 @@ class Basket extends Model
 
     protected $guarded = [];
 
-    public function variationVendor()
-    {
-        return $this->belongsToMany(VariationVendor::class, 'baskets_variations', 'basket_id', 'variation_vendor_id');
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class, 'basket_id');
     }
 
+    public function basketVariationVendor(): HasMany
+    {
+        return $this->hasMany(BasketVariationVendor::class,'basket_id');
+    }
+
     public function getTotalValueOfBasket()
     {
-        return $this->variationVendor()->sum('price');
+        return $this->basketVariationVendor()->sum('price');
     }
 }
