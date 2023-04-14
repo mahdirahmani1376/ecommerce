@@ -23,9 +23,9 @@ class Order extends Model
         'state' => OrderState::class,
     ];
 
-    public function products(): HasMany
+    public function variationVendor(): HasMany
     {
-        return $this->hasMany(OrderProduct::class, 'order_id');
+        return $this->hasMany(VariationVendor::class,'variation_vendor_id');
     }
 
     public function user()
