@@ -38,7 +38,7 @@ class BasketVariationVendorFactory extends Factory
         }
         return $this->state(function (array $attributes) use ($variationVendor){
            return [
-               'variation_vendor_id' => $variationVendor->variationVendorId,
+               'variation_vendor_id' => $variationVendor->variation_vendor_id,
                'price' => $variationVendor->price,
            ];
         });

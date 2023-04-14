@@ -49,6 +49,11 @@ class VoucherController extends Controller
         } elseif ($voucher->voucher_enum === VoucherEnum::giftCard->value) {
             return $this->applyGiftCard($voucher, $basket);
         }
+        else{
+            return  Response::json([
+                'message' => 'the voucher type is illegal'
+            ]);
+        }
     }
 
     public function applyCoupon(Voucher $voucher, Basket $basket)
@@ -61,30 +66,31 @@ class VoucherController extends Controller
 
         $this->checkProductSum($basket,$voucher);
 
-        $discountAmount = $sumOfProductsPrices * $discountPercent;
+        $discountAmount = $sumOfProductsPrices * $discountPercent / 100;
         if ($discountAmount > $max_discount) {
+            $discountAmount = $max_discount;
             $discountedPrice = $sumOfProductsPrices - $max_discount;
+            $discountPercent = $max_discount * 100 / $sumOfProductsPrices;
         } else {
             $discountedPrice = $sumOfProductsPrices - $discountAmount;
-            $basket->basketVariationVendor()->each(
-                function (BasketVariationVendor $basketVariationVendor) use ($discountPercent) {
-                    $basketVariationVendorPrice = $basketVariationVendor->price;
-                    $basketVariationVendorDiscountAmount = $basketVariationVendorPrice * $discountPercent;
-                    $basketVariationVendor->update([
-                        'discount_amount' => $basketVariationVendorDiscountAmount,
-                        'discounted_price' => $basketVariationVendorPrice - $basketVariationVendorDiscountAmount
-                    ]);
-                }
-            );
             }
 
-
+        $basket->basketVariationVendor()->each(
+            function (BasketVariationVendor $basketVariationVendor) use ($discountPercent) {
+                $basketVariationVendorPrice = $basketVariationVendor->price;
+                $basketVariationVendorDiscountAmount = $basketVariationVendorPrice * $discountPercent / 100;
+                $basketVariationVendor->update([
+                    'discount_amount' => $basketVariationVendorDiscountAmount,
+                    'discounted_price' => $basketVariationVendorPrice - $basketVariationVendorDiscountAmount
+                ]);
+            }
+        );
 
         $voucher->update([
             'used' => true,
         ]);
 
-        return $this->applyDiscount($basket, $discountedPrice, $discountAmount);
+        return $this->applyDiscount($basket, $discountedPrice, $discountAmount,$sumOfProductsPrices);
     }
 
     public function applyGiftCard(Voucher $voucher, Basket $basket)
@@ -102,27 +108,25 @@ class VoucherController extends Controller
             'used' => ! ($remainingDiscount > 0),
             ]);
 
-        return $this->applyDiscount($basket, $discountedPrice, $discountAmount);
+        return $this->applyDiscount($basket, $discountedPrice, $discountAmount,$sumOfProductsPrices);
         }
 
-    public function applyDiscount(Basket $basket, int $discountedPrice, int $discountAmount): JsonResponse
+    public function applyDiscount(Basket $basket, int $discountedPrice, int $discountAmount, int $total): JsonResponse
     {
         $basket->update([
             'discounted_price' => $discountedPrice,
             'discount_amount' => $discountAmount,
+            'total' => $total
         ]);
 
-        $basketVariations = $basket->baskets_variations;
-
-
         return Response::json(
-            data: $basket
+            data: $basket->load('basketVariationVendor')
         );
     }
 
     public function checkVoucher(Voucher $voucher){
         $now = Carbon::now();
-        if ($voucher->used && $now->lte($voucher->expire_date)) {
+        if ($voucher->used || $now->lte($voucher->expire_date)) {
             return Response::json(
                 data: [
                     'message' => 'this voucher is already used or it is expired',
