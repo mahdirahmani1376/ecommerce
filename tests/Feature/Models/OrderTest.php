@@ -4,10 +4,14 @@ namespace Tests\Feature\Models;
 
 use App\Enums\StockEnum;
 use App\Jobs\LowStockEventJob;
+use App\Models\Basket;
+use App\Models\BasketVariationVendor;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\ProductVendor;
+use App\Models\Variation;
+use App\Models\VariationVendor;
 use App\Models\Vendor;
 use App\States\OrderStates\Paid;
 use Bus;
@@ -21,13 +25,12 @@ class OrderTest extends BaseTestCase
 
     private Order $order;
 
-    private ProductVendor $productVendor;
-
     private Product $product;
 
     private Vendor $vendor;
 
     private int $stock;
+    private Variation $variation;
 
     protected function setUp(): void
     {
@@ -36,25 +39,15 @@ class OrderTest extends BaseTestCase
         $product = Product::factory()->create();
         $vendor = Vendor::factory()->create();
         $stock = StockEnum::LowStockEnum->value;
-        $productVendor = ProductVendor::factory()->create([
-            'vendor_id' => $vendor->vendor_id,
-            'product_id' => $product->product_id,
-            'stock' => $stock,
-        ]);
-        $order = Order::factory()->create([
-            'user_id' => $this->superAdmin->id,
-        ]);
+        $variation = Variation::factory()->for($product)->create();
 
-        $orderProduct = OrderProduct::create([
-            'product_id' => $product->product_id,
-            'vendor_id' => $vendor->vendor_id,
-            'order_id' => $order->order_id,
-        ]);
-        $this->order = $order;
-        $this->productVendor = $productVendor;
+        $variationVendor = VariationVendor::factory()->for($variation, 'variation')->create();
+
         $this->product = $product;
         $this->vendor = $vendor;
         $this->stock = $stock;
+        $this->variation = $variation;
+        $this->variationVendor = $variationVendor;
     }
 
     /** @test */
@@ -68,6 +61,34 @@ class OrderTest extends BaseTestCase
             'order_id' => $order->order_id,
             'state' => Paid::$name,
         ]);
+    }
+
+    /** @test */
+    public function can_order_be_created()
+    {
+        $user = $this->superAdmin;
+        $vendor = $this->vendor;
+        $product = $this->product;
+        $stock = $this->stock;
+        $variation = $this->variation;
+        $variationVendors = VariationVendor::factory()->count(5)->for($variation, 'variation')->create();
+        $total = $variationVendors->sum('price');
+        $basket = Basket::factory()->create([
+            'user_id' => $user->user_id,
+            'total' => $total,
+        ]);
+
+        $variationVendors->each(function (VariationVendor $variationVendor) use ($basket) {
+            BasketVariationVendor::factory()->forBasket($basket)->forVariationVendor($variationVendor)
+                ->create();
+        });
+
+        $basketVariationVendor = $basket->basketVariationVendor;
+        $response = $this->postJson(route('orders.store'),$basketVariationVendor->toArray());
+
+        dump($response);
+
+
     }
 
     /** @test */

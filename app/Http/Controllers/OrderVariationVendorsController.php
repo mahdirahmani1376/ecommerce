@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OrderVariationVendor;
+use App\Models\OrderVariation;
 use Illuminate\Http\Request;
 
 class OrderVariationVendorsController extends Controller
@@ -20,19 +20,19 @@ class OrderVariationVendorsController extends Controller
     {
     }
 
-    public function show(OrderVariationVendor $orderVariationVendor)
+    public function show(OrderVariation $orderVariationVendor)
     {
     }
 
-    public function edit(OrderVariationVendor $orderVariationVendor)
+    public function edit(OrderVariation $orderVariationVendor)
     {
     }
 
-    public function update(Request $request, OrderVariationVendor $orderVariationVendor)
+    public function update(Request $request, OrderVariation $orderVariationVendor)
     {
     }
 
-    public function destroy(OrderVariationVendor $orderVariationVendor)
+    public function destroy(OrderVariation $orderVariationVendor)
     {
     }
 }

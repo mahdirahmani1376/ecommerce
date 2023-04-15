@@ -32,9 +32,9 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     protected $observers = [
-        ProductVendor::class => [
-            ProductVendorObserver::class,
-        ],
+//        ProductVendor::class => [
+//            ProductVendorObserver::class,
+//        ],
         Order::class => [
             OrderObserver::class,
         ],

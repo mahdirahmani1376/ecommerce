@@ -25,4 +25,9 @@ class BasketVariationVendor extends Model
     {
         return $this->belongsTo(VariationVendor::class,'variation_vendor_id');
     }
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class,'order_id');
+    }
 }

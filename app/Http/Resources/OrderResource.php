@@ -12,8 +12,10 @@ class OrderResource extends JsonResource
         return [
             'order_id' => $this->order_id,
             'state' => $this->state,
-            'products' => ProductResource::collection($this->whenLoaded('products')),
             'user' => UserResource::make($this->whenLoaded('user')),
+            'delivery' => $this->whenLoaded('delivery'),
+            'basket' => $this->whenLoaded('basket'),
+            'variationVendor' => $this->whenLoaded('variationVendor'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

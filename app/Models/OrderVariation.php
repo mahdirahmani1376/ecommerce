@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class OrderVariationVendor extends Model
+class OrderVariation extends Model
 {
     protected $primaryKey = 'order_variation_vendor_id';
-    protected $table = 'order_variation_vendors';
+    protected $table = 'order_variation';
     protected $guarded = [];
 
     public function Order(): BelongsTo

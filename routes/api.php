@@ -51,7 +51,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('address', AddressController::class);
     Route::apiResource('category', CategoryController::class);
-    Route::apiResource('order', OrderController::class);
     Route::apiResource('delivery', DeliveryController::class);
     Route::apiResource('basket', BasketController::class);
     Route::controller(BasketController::class)->group(function () {

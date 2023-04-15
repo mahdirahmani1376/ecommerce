@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Basket extends Model
 {
@@ -27,5 +28,10 @@ class Basket extends Model
     public function getTotalValueOfBasket()
     {
         return $this->basketVariationVendor()->sum('price');
+    }
+
+    public function order(): HasOne
+    {
+        return $this->hasOne(Order::class,'basket_id');
     }
 }

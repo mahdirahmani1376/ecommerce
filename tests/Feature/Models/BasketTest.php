@@ -18,8 +18,6 @@ class BasketTest extends BaseTestCase
 
     private Order $order;
 
-    private ProductVendor $productVendor;
-
     private Product $product;
 
     private Vendor $vendor;

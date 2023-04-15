@@ -14,8 +14,8 @@ class VariationFactory extends Factory
     public function definition(): array
     {
         return [
-            'size_id' => Size::class,
-            'color_id' => Color::class,
+            'size_id' => Size::factory(),
+            'color_id' => Color::factory(),
         ];
     }
 }

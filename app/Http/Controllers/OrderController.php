@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Models\Basket;
+use App\Models\BasketVariationVendor;
 use App\Models\Order;
 use App\Models\OrderProduct;
+use App\Models\OrderVariation;
 use App\Models\ProductVendor;
 use App\Models\Voucher;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,40 +22,21 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return Response::json(OrderResource::make(Order::with('productsVendors', 'user')->paginate()));
+        return Response::json(OrderResource::make(Order::with('user', 'delivery','basket','variationVendor')->paginate()));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreOrderRequest $request)
+    public function store(StoreOrderRequest $storeOrderRequest)
     {
-        $validated = $request->validated();
-
+        $data = $storeOrderRequest->validated();
         $order = Order::create([
-            'user_id' => auth()->id(),
+            'user_id' => auth()->user()->user_id,
         ]);
 
-        foreach ($validated['products'] as $key => $value) {
-            $productVendor = ProductVendor::where(function (Builder $builder) use ($value) {
-                $builder
-                    ->where('product_id', $value['product_id'])
-                    ->where('vendor_id', $value['vendor_id']);
-            });
-
-            if ($productVendor->exists()) {
-                $productVendor->decrement('stock');
-                $productVendor = $productVendor->first();
-                OrderProduct::create([
-                    'product_id' => $productVendor->product_id,
-                    'vendor_id' => $productVendor->vendor_id,
-                    'order_id' => $order->order_id,
-                ]);
-            }
-
-        }
-
-        return OrderResource::make($order->load('user', 'products'));
+      $orderVariations = $order->orderVariations()->createMany($data);
+        return OrderResource::make($order->load('user', 'delivery','basket.basketVariationVendor'));
     }
 
     /**
