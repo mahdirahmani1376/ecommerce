@@ -27,12 +27,5 @@ class OrderFactory extends Factory
         });
     }
 
-    public function forProduct(Product $product)
-    {
-        return $this->state(function (array $attributes) use ($product) {
-            return [
-                'product_id' => $product->product_id,
-            ];
-        });
-    }
+
 }

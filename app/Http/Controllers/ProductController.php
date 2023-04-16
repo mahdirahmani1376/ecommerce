@@ -6,6 +6,8 @@ use App\Http\Requests\StoreproductRequest;
 use App\Http\Requests\UpdateproductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
 class ProductController extends Controller
@@ -13,9 +15,12 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Response::json(ProductResource::collection(Product::Filter()->with(['vendors', 'category', 'brand', 'media'])->paginate()));
+        return Product::filter($request);
+//        return Response::json(ProductResource::collection(Product::Filter()
+//            ->with(['variation','category', 'brand', 'media'])
+//            ->paginate()));
     }
 
     /**
@@ -68,4 +73,5 @@ class ProductController extends Controller
             data: $product->usersWishlist
         );
     }
+
 }

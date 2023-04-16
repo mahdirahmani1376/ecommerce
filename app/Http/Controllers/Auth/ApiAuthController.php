@@ -42,13 +42,13 @@ class ApiAuthController extends Controller
 
         if (Auth::attempt($validated)) {
             $request->session()->regenerate();
-
-            $this->createToken();
+            $this->createToken($request);
         }
 
         return Response::json([
-            'data' => 'the credentials doesn not match our records',
+            'data' => 'the credentials does not match our records',
         ]);
+
     }
 
     public function logout(Request $request)
