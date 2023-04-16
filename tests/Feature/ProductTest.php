@@ -6,7 +6,6 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\ProductVendor;
 use App\Models\Vendor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -27,11 +26,6 @@ class ProductTest extends BaseTestCase
         ]);
         Product::factory(100)->has(Brand::factory(), 'brand')->create();
         $vendor = Vendor::factory()->create();
-
-        $productVendor = ProductVendor::factory()->create([
-            'vendor_id' => $vendor->vendor_id,
-            'product_id' => $product->product_id,
-        ]);
 
         $user = $this->superAdmin;
         $order = Order::factory()->create([

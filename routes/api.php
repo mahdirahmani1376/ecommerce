@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Controllers\BasketController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\OrderController;
@@ -29,14 +30,6 @@ Route::controller(ApiAuthController::class)->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::controller(OrderController::class)->prefix('/orders')->group(function () {
-        Route::get('/', 'index')->name('orders.index')->middleware('can:orders.view_any');
-        Route::get('/{order}', 'show')->name('orders.show')->middleware('can:orders.view');
-        Route::post('/', 'store')->name('orders.store');
-        Route::put('/{order}', 'update')->name('orders.update')->middleware('can:orders.update');
-        Route::delete('/{order}', 'delete')->name('orders.delete')->middleware('can:orders.delete');
-    });
-
     Route::controller(UserController::class)->prefix('/users')->group(function () {
         Route::get('/wishlist')->name('users.wishlist');
     });
@@ -49,16 +42,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{product}', 'delete')->name('products.delete')->middleware('can:products.delete');
     });
 
+    Route::apiResource('order', OrderController::class);
     Route::apiResource('address', AddressController::class);
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('delivery', DeliveryController::class);
     Route::apiResource('basket', BasketController::class);
+    Route::apiResource('brand', BrandController::class);
     Route::controller(BasketController::class)->group(function () {
         Route::post('/{variationVendor}/add_to_basket', 'addToBasket')->name('basket.add-to-basket');
         Route::post('/{variationVendor}/remove_from_basket', 'removeFromBasket')->name('basket.remove-from-basket');
     });
     Route::apiResource('voucher', VoucherController::class);
     Route::controller(VoucherController::class)->group(function () {
-       Route::post('/{voucher}/apply_voucher', 'applyVoucher')->name('apply-voucher');
+        Route::post('/{voucher}/apply_voucher', 'applyVoucher')->name('apply-voucher');
     });
 });

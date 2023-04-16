@@ -31,12 +31,12 @@ class VoucherFactory extends Factory
     public function asCoupon()
     {
         return $this->state(function (array $attributes) {
-           return [
-               'voucher_enum' => VoucherEnum::coupon->value,
-               'discount_percent' => random_int(0, 100),
-               'max_discount' => random_int(0, 10000),
-               'min_basket_limit' => random_int(1, 200),
-           ];
+            return [
+                'voucher_enum' => VoucherEnum::coupon->value,
+                'discount_percent' => random_int(0, 100),
+                'max_discount' => random_int(0, 10000),
+                'min_basket_limit' => random_int(1, 200),
+            ];
         });
     }
 }

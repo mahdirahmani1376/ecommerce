@@ -22,7 +22,7 @@ class Basket extends Model
 
     public function basketVariationVendor(): HasMany
     {
-        return $this->hasMany(BasketVariationVendor::class,'basket_id');
+        return $this->hasMany(BasketVariationVendor::class, 'basket_id');
     }
 
     public function getTotalValueOfBasket()
@@ -32,6 +32,6 @@ class Basket extends Model
 
     public function order(): HasOne
     {
-        return $this->hasOne(Order::class,'basket_id');
+        return $this->hasOne(Order::class, 'basket_id');
     }
 }

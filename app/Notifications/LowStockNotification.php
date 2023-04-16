@@ -3,7 +3,7 @@
 namespace App\Notifications;
 
 use App\Enums\StockEnum;
-use App\Models\ProductVendor;
+use App\Models\VariationVendor;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -13,12 +13,9 @@ class LowStockNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected ProductVendor $productVendor;
-
     public function __construct(
-        ProductVendor $productVendor
+        protected VariationVendor $variationVendor
     ) {
-        $this->productVendor = $productVendor;
     }
 
     public function via($notifiable): array
@@ -28,7 +25,7 @@ class LowStockNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable): MailMessage
     {
-        $product = $this->productVendor->product;
+        $product = $this->variationVendor->variation->Product;
 
         return (new MailMessage)
             ->line('Your product with name:'.$product->name.' has less than'.StockEnum::LowStockEnum->value.'stock available')
@@ -39,7 +36,7 @@ class LowStockNotification extends Notification implements ShouldQueue
     public function toArray($notifiable): array
     {
         return [
-            'productVendor' => $this->productVendor,
+            'variationVendor' => $this->variationVendor,
         ];
     }
 }

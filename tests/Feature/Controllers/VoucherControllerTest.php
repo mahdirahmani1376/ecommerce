@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Controllers;
 
-use App\Enums\StockEnum;
 use App\Models\Basket;
 use App\Models\BasketVariationVendor;
 use App\Models\Product;
@@ -20,7 +19,6 @@ class VoucherControllerTest extends BaseTestCase
     protected function setUp(): void
     {
         parent::SetUp();
-
     }
 
     /** @test */
@@ -51,7 +49,6 @@ class VoucherControllerTest extends BaseTestCase
         BasketVariationVendor::factory()->forBasket($basket)->forVariationVendor($variationVendor)->count(4)->create();
         BasketVariationVendor::factory()->forBasket($basket)->forVariationVendor($variationVendor2)->count(2)->create();
 
-
         $basketTotal = $basket->getTotalValueOfBasket();
         $basket->total = $basketTotal;
 
@@ -74,17 +71,15 @@ class VoucherControllerTest extends BaseTestCase
             'discounted_price' => $basketTotal - $discountAmount,
         ]);
 
-
         $variationVendorPrice = $variationVendor->price;
         $discountAmountVariationVendor = $variationVendorPrice * $discountPercent / 100;
-        $this->assertDatabaseHas('baskets_variations',[
+        $this->assertDatabaseHas('basket_variation_vendors', [
             'basket_id' => $basket->basket_id,
             'variation_vendor_id' => $variationVendor->variation_vendor_id,
             'price' => $variationVendorPrice,
             'discount_amount' => $discountAmountVariationVendor,
             'discounted_price' => $variationVendorPrice - $discountAmountVariationVendor,
         ]);
-
     }
 
     /** @test */
@@ -115,7 +110,6 @@ class VoucherControllerTest extends BaseTestCase
         BasketVariationVendor::factory()->forBasket($basket)->forVariationVendor($variationVendor)->count(4)->create();
         BasketVariationVendor::factory()->forBasket($basket)->forVariationVendor($variationVendor2)->count(4)->create();
 
-
         $basketTotal = $basket->getTotalValueOfBasket();
         $basket->total = $basketTotal;
 
@@ -139,16 +133,14 @@ class VoucherControllerTest extends BaseTestCase
             'discounted_price' => $basketTotal - $discountAmount,
         ]);
 
-
         $variationVendorPrice = $variationVendor->price;
         $discountAmountVariationVendor = $variationVendorPrice * $discountPercent / 100;
-        $this->assertDatabaseHas('baskets_variations',[
+        $this->assertDatabaseHas('basket_variation_vendors', [
             'basket_id' => $basket->basket_id,
             'variation_vendor_id' => $variationVendor->variation_vendor_id,
             'price' => $variationVendorPrice,
             'discount_amount' => $discountAmountVariationVendor,
             'discounted_price' => $variationVendorPrice - $discountAmountVariationVendor,
         ]);
-
     }
 }

@@ -9,7 +9,6 @@ class ColorsController extends Controller
 {
     public function index()
     {
-
     }
 
     public function create()

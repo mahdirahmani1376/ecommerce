@@ -19,10 +19,10 @@ class BasketController extends Controller
 
         $basket->basketVariationVendor()->create([
             'price' => $variationVendor->price,
-            'variation_vendor_id' => $variationVendor->variation_vendor_id
+            'variation_vendor_id' => $variationVendor->variation_vendor_id,
         ]);
 
-        --$variationVendor->stock;
+        $variationVendor->stock--;
 
         return Response::json($basket->load('basketVariationVendor'));
     }
@@ -36,6 +36,5 @@ class BasketController extends Controller
         $basketVariation->variationVendor()->increment('stock');
 
         return Response::json($basket->load('variationVendor'));
-
     }
 }

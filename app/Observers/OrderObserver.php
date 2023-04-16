@@ -16,6 +16,7 @@ class OrderObserver
 
     public function deleted(Order $order)
     {
+        $order->basket->delete();
     }
 
     public function restored(Order $order)
@@ -23,6 +24,10 @@ class OrderObserver
     }
 
     public function forceDeleted(Order $order)
+    {
+    }
+
+    public function checkStock(Order $order)
     {
     }
 }

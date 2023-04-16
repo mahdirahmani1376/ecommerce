@@ -10,24 +10,24 @@ class BasketVariationVendor extends Model
 {
     use HasFactory;
 
-
     protected $primaryKey = 'basket_variation_id';
-    protected $guarded = [];
-    protected $table = 'baskets_variations';
 
+    protected $guarded = [];
+
+    protected $table = 'basket_variation_vendors';
 
     public function basket(): BelongsTo
     {
-        return $this->belongsTo(Basket::class,'basket_id');
+        return $this->belongsTo(Basket::class, 'basket_id');
     }
 
     public function variationVendor(): BelongsTo
     {
-        return $this->belongsTo(VariationVendor::class,'variation_vendor_id');
+        return $this->belongsTo(VariationVendor::class, 'variation_vendor_id');
     }
 
     public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class,'order_id');
+        return $this->belongsTo(Order::class, 'order_id');
     }
 }

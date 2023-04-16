@@ -19,7 +19,7 @@ class BrandControllerTest extends BaseTestCase
         $brand = Brand::factory()->raw();
         $brand['image'] = $image;
 
-        $response = $this->actingAs($this->superAdmin)->postJson(route('brands.store'), $brand);
+        $response = $this->actingAs($this->superAdmin)->postJson(route('brand.store'), $brand);
         $file = Brand::where('name', $brand['name'])->first()->getFirstMediaPath();
 
         $response->assertStatus(201);

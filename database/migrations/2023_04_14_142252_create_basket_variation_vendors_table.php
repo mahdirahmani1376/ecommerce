@@ -4,13 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up()
     {
-        Schema::create('baskets_variations', function (Blueprint $table) {
+        Schema::create('basket_variation_vendors', function (Blueprint $table) {
             $table->id('basket_variation_id');
             $table->foreignId('basket_id');
-            $table->foreignId('order_id')->nullable();
             $table->foreignId('variation_vendor_id')->nullable();
             $table->integer('price');
             $table->integer('discount_amount')->nullable();
@@ -21,6 +21,6 @@ return new class extends Migration {
 
     public function down()
     {
-        Schema::dropIfExists('baskets_variations');
+        Schema::dropIfExists('basket_variation_vendors');
     }
 };

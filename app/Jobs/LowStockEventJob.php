@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\ProductVendor;
+use App\Models\VariationVendor;
 use App\Notifications\LowStockNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,17 +15,14 @@ class LowStockEventJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private ProductVendor $productVendor;
-
-    public function __construct(ProductVendor $productVendor)
-    {
-        $this->productVendor = $productVendor;
+    public function __construct(
+        protected VariationVendor $variationVendor
+    ) {
     }
 
     public function handle()
     {
-        $productVendor = $this->productVendor;
-        $vendor = $productVendor->vendor;
-        Notification::send($vendor, new LowStockNotification($productVendor));
+        $variationVendor = $this->variationVendor;
+        Notification::send($variationVendor->vendor, new LowStockNotification($variationVendor));
     }
 }

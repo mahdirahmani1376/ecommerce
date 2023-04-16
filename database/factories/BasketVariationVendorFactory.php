@@ -20,27 +20,28 @@ class BasketVariationVendorFactory extends Factory
 
     public function forBasket(Basket $basket): Factory
     {
-        if (!isset($basket)){
+        if (! isset($basket)) {
             $basket = Basket::factory()->create();
         }
 
-        return $this->state(function (array $attributes) use ($basket){
-           return [
-               'basket_id' => $basket->basket_id
-           ];
+        return $this->state(function (array $attributes) use ($basket) {
+            return [
+                'basket_id' => $basket->basket_id,
+            ];
         });
     }
 
     public function forVariationVendor(VariationVendor $variationVendor): Factory
     {
-        if (!isset($variationVendor)){
+        if (! isset($variationVendor)) {
             $variationVendor = VariationVendor::factory()->create();
         }
-        return $this->state(function (array $attributes) use ($variationVendor){
-           return [
-               'variation_vendor_id' => $variationVendor->variation_vendor_id,
-               'price' => $variationVendor->price,
-           ];
+
+        return $this->state(function (array $attributes) use ($variationVendor) {
+            return [
+                'variation_vendor_id' => $variationVendor->variation_vendor_id,
+                'price' => $variationVendor->price,
+            ];
         });
     }
 }

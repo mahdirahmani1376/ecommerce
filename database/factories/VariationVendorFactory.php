@@ -28,11 +28,10 @@ class VariationVendorFactory extends Factory
         }
 
         return $this->state(function (array $attributes) use ($variation) {
-           return [
-               'product_id' => $variation->product_id,
-               'variation_id' => $variation->variation_id,
-           ];
+            return [
+                'product_id' => $variation->product_id,
+                'variation_id' => $variation->variation_id,
+            ];
         });
-
     }
 }

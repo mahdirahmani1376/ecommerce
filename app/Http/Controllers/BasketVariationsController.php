@@ -9,7 +9,6 @@ class BasketVariationsController extends Controller
 {
     public function index()
     {
-
     }
 
     public function create()

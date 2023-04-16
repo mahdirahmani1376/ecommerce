@@ -5,13 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
-use App\Models\Basket;
-use App\Models\BasketVariationVendor;
 use App\Models\Order;
 use App\Models\OrderProduct;
-use App\Models\OrderVariation;
 use App\Models\ProductVendor;
-use App\Models\Voucher;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Response;
 
@@ -22,7 +18,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return Response::json(OrderResource::make(Order::with('user', 'delivery','basket','variationVendor')->paginate()));
+        return Response::json(OrderResource::make(Order::with('user', 'delivery', ['basket' => ['basketVariationVendor']])->paginate()));
     }
 
     /**
@@ -33,10 +29,10 @@ class OrderController extends Controller
         $data = $storeOrderRequest->validated();
         $order = Order::create([
             'user_id' => auth()->user()->user_id,
+            'basket_id' => $data['basket_id'],
         ]);
 
-      $orderVariations = $order->orderVariations()->createMany($data);
-        return OrderResource::make($order->load('user', 'delivery','basket.basketVariationVendor'));
+        return OrderResource::make($order->load('user', 'delivery', 'basket.basketVariationVendor'));
     }
 
     /**
@@ -44,7 +40,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        return Response::json(OrderResource::make($order->with('user', 'products')));
+        return Response::json(OrderResource::make($order->with('user', 'delivery', ['basket' => ['basketVariationVendor']])));
     }
 
     /**
@@ -70,7 +66,6 @@ class OrderController extends Controller
                     'order_id' => $order->order_id,
                 ]);
             }
-
         }
 
         return Response::json(OrderResource::make($order->load('user', 'products')));
@@ -81,23 +76,10 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        $order->products()->each(function (OrderProduct $orderProduct) {
-           ProductVendor::where([
-               'product_id' => $orderProduct->product_id,
-               'vendor_id' => $orderProduct->vendor_id,
-           ])
-               ->increment('stock');
-        });
-
         $order->delete();
 
         return Response::json([
             'message' => 'Order deleted successfully',
         ]);
-    }
-
-    private function applyCoupon(ProductVendor $productVendor, Voucher $coupon)
-    {
-//        $productVendor->price
     }
 }

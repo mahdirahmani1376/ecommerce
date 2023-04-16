@@ -5,7 +5,6 @@ namespace Tests\Feature\Models;
 use App\Enums\StockEnum;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\ProductVendor;
 use App\Models\Variation;
 use App\Models\VariationVendor;
 use App\Models\Vendor;
@@ -56,10 +55,9 @@ class BasketTest extends BaseTestCase
             'user_id' => $user->basket->user_id,
         ]);
 
-        $this->assertDatabaseHas('baskets_variations', [
+        $this->assertDatabaseHas('basket_variation_vendors', [
             'basket_id' => $user->basket->basket_id,
             'variation_vendor_id' => $variationVendor->variation_vendor_id,
         ]);
-
     }
 }

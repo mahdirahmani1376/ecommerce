@@ -6,8 +6,6 @@ use App\States\OrderState;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\ModelStates\HasStates;
 
@@ -35,13 +33,8 @@ class Order extends Model
         return $this->hasOne(Delivery::class, 'order_id');
     }
 
-    public function basketVariationVendor(): HasMany
+    public function basket(): BelongsTo
     {
-        return $this->hasMany(BasketVariationVendor::class,'order_id');
-    }
-
-    public function orderVariations(): HasMany
-    {
-        return $this->hasMany(OrderVariation::class,'order_id');
+        return $this->belongsTo(Basket::class, 'basket_id');
     }
 }

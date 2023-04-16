@@ -29,10 +29,10 @@ class VariationVendor extends Model
 
     public function basketsVariations(): HasMany
     {
-        return $this->hasMany(BasketVariationVendor::class,'variation_vendor_id');
+        return $this->hasMany(BasketVariationVendor::class, 'variation_vendor_id');
     }
 
-    public function variationVendor(){
-
+    public function variationVendor()
+    {
     }
 }
