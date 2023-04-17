@@ -48,7 +48,6 @@ class ApiAuthController extends Controller
         return Response::json([
             'data' => 'the credentials does not match our records',
         ]);
-
     }
 
     public function logout(Request $request)

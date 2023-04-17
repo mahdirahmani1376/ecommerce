@@ -17,12 +17,12 @@ class Variation extends Model
 
     public function size()
     {
-        return $this->hasOne(Size::class, 'size_id');
+        return $this->belongsTo(Size::class, 'size_id');
     }
 
     public function color()
     {
-        return $this->hasOne(Color::class, 'color_id');
+        return $this->belongsTo(Color::class, 'color_id');
     }
 
     public function variationVendor(): HasMany

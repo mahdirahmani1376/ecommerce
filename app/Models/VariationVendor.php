@@ -31,8 +31,4 @@ class VariationVendor extends Model
     {
         return $this->hasMany(BasketVariationVendor::class, 'variation_vendor_id');
     }
-
-    public function variationVendor()
-    {
-    }
 }

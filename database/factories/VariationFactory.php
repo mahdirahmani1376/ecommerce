@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Color;
+use App\Models\Product;
 use App\Models\Size;
 use App\Models\Variation;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -16,6 +17,7 @@ class VariationFactory extends Factory
         return [
             'size_id' => Size::factory(),
             'color_id' => Color::factory(),
+            'product_id' => Product::factory(),
         ];
     }
 }

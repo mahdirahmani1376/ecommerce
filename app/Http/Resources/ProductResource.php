@@ -17,9 +17,8 @@ class ProductResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
+            'variation' => VariationResource::collection($this->whenLoaded('variation')),
             'category' => CategoryResource::make($this->whenLoaded('category')),
-            'vendor' => VendorResource::collection($this->whenLoaded('vendors')),
-            'orders' => OrderResource::collection($this->whenLoaded('orders')),
             'brand' => BrandResource::make($this->whenLoaded('brand')),
         ];
     }

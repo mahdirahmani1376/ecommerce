@@ -9,7 +9,6 @@ use App\Models\Category;
 use App\Models\Color;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\ProductVendor;
 use App\Models\Size;
 use App\Models\User;
 use App\Models\Variation;
@@ -66,7 +65,7 @@ class DatabaseSeeder extends Seeder
         $sizes = Size::factory()->count(20)->create();
         $colors = Color::factory()->count(20)->create();
         $products = Product::factory()->count(20)
-            ->sequence(fn(Sequence $sequence) => [
+            ->sequence(fn (Sequence $sequence) => [
                 'brand_id' => $brands->random()->brand_id,
                 'category_id' => $subCategories->random()->category_id,
             ])
@@ -74,8 +73,8 @@ class DatabaseSeeder extends Seeder
 
         $products->each(function ($product) use ($colors, $sizes, $vendors) {
             Variation::factory()
-                ->count(20)->hasVariationVendor(2,[
-                    'vendor_id' => $vendors->random()->vendor_id
+                ->count(20)->hasVariationVendor(2, [
+                    'vendor_id' => $vendors->random()->vendor_id,
                 ])
                 ->create([
                     'product_id' => $product->product_id,

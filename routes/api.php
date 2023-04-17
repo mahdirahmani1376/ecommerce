@@ -30,30 +30,30 @@ Route::controller(ApiAuthController::class)->group(function () {
 });
 
 //Route::middleware('auth:sanctum')->group(function () {
-    Route::controller(UserController::class)->prefix('/users')->group(function () {
-        Route::get('/wishlist')->name('users.wishlist');
-    });
-    Route::controller(ProductController::class)->prefix('/products')->group(function () {
-        Route::get('/', 'index')->name('products.index');
-        Route::get('/{product}', 'view')->name('products.view');
-        Route::get('/{product}/users-wishlist', 'usersWishList')->name('products.usersWishList');
-        Route::post('/', 'store')->name('products.store');
-        Route::put('/{product}', 'update')->name('products.update');
-        Route::delete('/{product}', 'delete')->name('products.delete');
-    });
+Route::controller(UserController::class)->prefix('/users')->group(function () {
+    Route::get('/wishlist')->name('users.wishlist');
+});
+Route::controller(ProductController::class)->prefix('/products')->group(function () {
+    Route::get('/', 'index')->name('products.index');
+    Route::get('/{product}', 'view')->name('products.view');
+    Route::get('/{product}/users-wishlist', 'usersWishList')->name('products.usersWishList');
+    Route::post('/', 'store')->name('products.store');
+    Route::put('/{product}', 'update')->name('products.update');
+    Route::delete('/{product}', 'delete')->name('products.delete');
+});
 
-    Route::apiResource('order', OrderController::class);
-    Route::apiResource('address', AddressController::class);
-    Route::apiResource('category', CategoryController::class);
-    Route::apiResource('delivery', DeliveryController::class);
-    Route::apiResource('basket', BasketController::class);
-    Route::apiResource('brand', BrandController::class);
-    Route::controller(BasketController::class)->group(function () {
-        Route::post('/{variationVendor}/add_to_basket', 'addToBasket')->name('basket.add-to-basket');
-        Route::post('/{variationVendor}/remove_from_basket', 'removeFromBasket')->name('basket.remove-from-basket');
-    });
-    Route::apiResource('voucher', VoucherController::class);
-    Route::controller(VoucherController::class)->group(function () {
-        Route::post('/{voucher}/apply_voucher', 'applyVoucher')->name('apply-voucher');
-    });
+Route::apiResource('order', OrderController::class);
+Route::apiResource('address', AddressController::class);
+Route::apiResource('category', CategoryController::class);
+Route::apiResource('delivery', DeliveryController::class);
+Route::apiResource('basket', BasketController::class);
+Route::apiResource('brand', BrandController::class);
+Route::controller(BasketController::class)->group(function () {
+    Route::post('/{variationVendor}/add_to_basket', 'addToBasket')->name('basket.add-to-basket');
+    Route::post('/{variationVendor}/remove_from_basket', 'removeFromBasket')->name('basket.remove-from-basket');
+});
+Route::apiResource('voucher', VoucherController::class);
+Route::controller(VoucherController::class)->group(function () {
+    Route::post('/{voucher}/apply_voucher', 'applyVoucher')->name('apply-voucher');
+});
 //});

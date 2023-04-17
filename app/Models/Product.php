@@ -6,15 +6,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
-use Illuminate\Support\Stringable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class Product extends Model implements HasMedia
 {
@@ -26,13 +22,9 @@ class Product extends Model implements HasMedia
 
     protected $guarded = [];
 
-    public function orders()
-    {
-    }
-
     public function variation(): HasMany
     {
-        return $this->hasMany(Variation::class, 'variation_id');
+        return $this->hasMany(Variation::class, 'product_id');
     }
 
     public function category(): BelongsTo
@@ -50,31 +42,39 @@ class Product extends Model implements HasMedia
         return $this->belongsToMany(User::class, 'products_users', 'product_id', 'user_id');
     }
 
-    public function coupon()
+    public function scopeFilter(Builder $query): Builder
     {
-        return $this->morphToMany(Voucher::class, 'couponnnable', 'couponnable', 'product_id', 'coupon_id');
-    }
-
-    public function baskets()
-    {
-        return $this->belongsToMany(Basket::class, 'baskets_products', 'product_id', 'basket_id');
-    }
-
-    public static function filter(Request $request)
-    {
-        $results = Product::query()
-            ->when($request->string('weight'),function (Builder $query,Stringable $weight){
-                $query->where('weight','<=',$weight->value());
+        $request = request();
+        return Product::query()
+            ->when($request->query('weight'), function (Builder $query, $weight) {
+                $query->where('weight', '<=', $weight);
             })
-            ->when($request->string('brand'),function (Builder $query,Stringable $brand){
-                $query->whereRelation('brand','name','LIKE',$brand);
+            ->when($request->query('name'), function (Builder $query, $name) {
+                $query->where('name', 'like', '%'.$name.'%');
             })
-            ->when($request->string('category'),function (Builder $query,Stringable $category){
-                $query->whereRelation('category','name','LIKE',$category);
+            ->when($request->query('rating'), function (Builder $query, $rating) {
+                $query->where('rating', '>=', $rating);
             })
-            ->get();
-
-        return $results;
+            ->when($request->query('brand'), function (Builder $query, $brand) {
+                $query->whereRelation('brand', 'name', '=', $brand);
+            })
+            ->when($request->query('size'), function (Builder $query, $size) {
+                $query->whereRelation('variation.size', 'name', '=', $size);
+            })
+            ->when($request->query('color'), function (Builder $query, $color) {
+                $query->whereRelation('variation.color', 'name', '=', $color);
+            })
+            ->when($request->query('category'), function (Builder $query, $category) {
+                $query->whereRelation('category', 'name', '=', $category);
+            })
+            ->when($request->query('min_price'), function (Builder $query, $minPrice) {
+                $query->whereRelation('variation.variationVendor', 'price', '>=', $minPrice);
+            })
+            ->when($request->query('max_price'), function (Builder $query, $maxPrice) {
+                $query->whereRelation('variation.variationVendor', 'price', '<=', $maxPrice);
+            })
+            ->when($request->boolean('stock'), function (Builder $query) {
+                $query->whereRelation('variation.variationVendor', 'stock', '!=', 0);
+            });
     }
-
 }
