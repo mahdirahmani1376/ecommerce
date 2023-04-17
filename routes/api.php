@@ -29,7 +29,7 @@ Route::controller(ApiAuthController::class)->group(function () {
     Route::post('/user/logout', 'logout')->name('user.logout');
 });
 
-//Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
 Route::controller(UserController::class)->prefix('/users')->group(function () {
     Route::get('/wishlist')->name('users.wishlist');
 });
@@ -56,4 +56,4 @@ Route::apiResource('voucher', VoucherController::class);
 Route::controller(VoucherController::class)->group(function () {
     Route::post('/{voucher}/apply_voucher', 'applyVoucher')->name('apply-voucher');
 });
-//});
+});

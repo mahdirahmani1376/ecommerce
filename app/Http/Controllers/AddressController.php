@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateAddressRequest;
 use App\Http\Resources\AddressResource;
 use App\Models\Address;
 use Illuminate\Support\Facades\Response;
+use OpenApi\Annotations as OA;
 
 class AddressController extends Controller
 {

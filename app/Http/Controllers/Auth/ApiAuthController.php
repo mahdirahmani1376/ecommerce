@@ -18,6 +18,7 @@ class ApiAuthController extends Controller
 
     public function createToken(Request $request)
     {
+        $request->user()->tokens()->delete();
         $token = $request->user()->createToken('login_token');
 
         return Response::json([
@@ -41,8 +42,7 @@ class ApiAuthController extends Controller
         ]);
 
         if (Auth::attempt($validated)) {
-            $request->session()->regenerate();
-            $this->createToken($request);
+            return $this->createToken($request);
         }
 
         return Response::json([
@@ -54,7 +54,6 @@ class ApiAuthController extends Controller
     {
         Auth::guard()->logout();
 
-        $request->session()->invalidate();
 
         return Response::json([
             'data' => 'you have been logged out',

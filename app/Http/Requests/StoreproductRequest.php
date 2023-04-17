@@ -22,12 +22,13 @@ class StoreproductRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
             'name' => ['required', 'string', 'max:255'],
-            'rating' => ['nullable', Rule::in([range(0, 6)])],
-            'description' => ['string', 'nullable', 'max:255'],
+//            'rating' => ['nullable', Rule::in([range(0, 6)])],
+//            'description' => ['string', 'nullable', 'max:255'],
             'weight' => ['integer', 'required'],
-            'image' => ['image', 'nullable'],
+//            'image' => ['image', 'nullable'],
         ];
     }
 }
