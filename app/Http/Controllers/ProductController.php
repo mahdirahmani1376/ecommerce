@@ -20,19 +20,23 @@ class ProductController extends Controller
      *      summary="Get list of products",
      *      description="Returns list of products",
      *      security={{"sanctum": {}}},
+     *
      *      @OA\Parameter(
      *          name="weight",
      *          required=false,
      *          in="query",
      *          description="weight of product",
+     *
      *          @OA\Schema(
      *          type="integer",
-     *          example="2"
+     *          example="250"
      *          )),
+     *
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
      *       ),
+     *
      *      @OA\Response(
      *          response=401,
      *          description="Unauthenticated",
@@ -59,9 +63,9 @@ class ProductController extends Controller
      *     summary="store a new product",
      *     security={{"sanctum": {}}},
      *     @OA\RequestBody(required=true,@OA\JsonContent(ref="#/components/schemas/StoreProductRequest")),
-     *     @OA\Response(response=200,description="Successful operation",),
+     *     @OA\Response(response=200,description="Successful operation",@OA\JsonContent()),
      *     @OA\Response(response=401,description="Unauthenticated",),
-     *     @OA\Response(response=403,description="Forbidden")
+     *     @OA\Response(response=403,description="Forbidden",)
      * )
      */
     public function store(StoreproductRequest $request)
@@ -71,28 +75,44 @@ class ProductController extends Controller
 
         $product = Product::create($validated);
 
-//        if ($validated['image']) {
-//            $image = $validated['image'];
-//            $product->addMedia($image)->toMediaCollection();
-//        }
-        return Response::json(ProductResource::make($product->with('orders', 'vendors')));
+        if ($request->file('image')) {
+            $image = $request->file('image');
+            $product->addMedia($image)->toMediaCollection();
+        }
+
+        return Response::json(ProductResource::make($product->load('variation', 'category', 'brand')));
     }
 
+
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/products/{product}",
+     *     description="update product request",
+     *     summary="update product details",
+     *     tags={"Products"},
+     *     operationId="update",
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/UpdateProductRequest")),
+     *     @OA\Parameter(name="product",required=false,in="path",description="product id of product",
+     *          @OA\Schema(type="integer",example="1")),
+     *      @OA\Response(response=200,description="Successful operation",),
+     *      @OA\Response(response=401,description="Unauthenticated",),
+     *      @OA\Response(response=403,description="Forbidden")
+     *     )
+     * )
      */
     public function update(UpdateproductRequest $request, Product $product)
     {
         $validated = $request->validated();
 
-        if ($validated->image) {
-            $image = $validated->image;
+        if ($request->file('image')) {
+            $image = $request->file('image');
             $product->addMedia($image)->toMediaCollection();
         }
 
         $product->update($validated);
 
-        return Response::json(ProductResource::make($product->with('orders', 'vendors')));
+        return Response::json(ProductResource::make($product->load('variation', 'category', 'brand')));
     }
 
     /**

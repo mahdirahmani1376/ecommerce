@@ -54,7 +54,6 @@ class ApiAuthController extends Controller
     {
         Auth::guard()->logout();
 
-
         return Response::json([
             'data' => 'you have been logged out',
         ]);

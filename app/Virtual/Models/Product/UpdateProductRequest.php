@@ -6,13 +6,13 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     title="Store Product Reqeust",
- *     description="Store Product request body Data",
+ *     title="Update Product Reqeust",
+ *     description="Update Product request body Data",
  *     type="object",
  *     required={"name","weight"}
  * )
  */
-class StoreProductRequest
+class UpdateProductRequest
 {
     /**
      * @OA\Property(

@@ -12,7 +12,7 @@ return [
                 /*
                  * Route for accessing api documentation interface
                 */
-                'api' => 'api/documentation',
+                'api' => 'http://ecommerce.local:8000/api',
             ],
             'paths' => [
                 /*
@@ -198,7 +198,7 @@ return [
                     'name' => 'Authorization', // The name of the header or query parameter to be used.
                     'in' => 'header', // The location of the API key. Valid values are "query" or "header".
                 ],
-//                */
+                //                */
             ],
             'security' => [
                 /*

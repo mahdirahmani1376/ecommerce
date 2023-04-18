@@ -49,7 +49,7 @@ class VoucherController extends Controller
         } elseif ($voucher->voucher_enum === VoucherEnum::giftCard->value) {
             return $this->applyGiftCard($voucher, $basket);
         } else {
-            return  Response::json([
+            return Response::json([
                 'message' => 'the voucher type is illegal',
             ]);
         }

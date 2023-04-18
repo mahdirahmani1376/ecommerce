@@ -35,7 +35,7 @@
                         "required": false,
                         "schema": {
                             "type": "integer",
-                            "example": "2"
+                            "example": "250"
                         }
                     }
                 ],
@@ -69,6 +69,58 @@
                         "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/StoreProductRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/products/{product}": {
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "update product details",
+                "description": "update product request",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "product",
+                        "in": "path",
+                        "description": "product id of product",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProductRequest"
                             }
                         }
                     }
@@ -110,11 +162,56 @@
                     "rating": {
                         "title": "rating",
                         "description": "rating of the product",
-                        "example": "test"
+                        "type": "integer",
+                        "example": "2"
                     },
                     "description": {
                         "title": "description",
                         "description": "description of the product",
+                        "type": "string",
+                        "example": "test"
+                    },
+                    "weight": {
+                        "title": "weight",
+                        "description": "weight of the product",
+                        "example": "100"
+                    },
+                    "brand_id": {
+                        "title": "brand_id",
+                        "description": "brand_id of the product",
+                        "example": "1"
+                    },
+                    "category_id": {
+                        "title": "category_id",
+                        "description": "category_id of the product",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateProductRequest": {
+                "title": "Update Product Reqeust",
+                "description": "Update Product request body Data",
+                "required": [
+                    "name",
+                    "weight"
+                ],
+                "properties": {
+                    "name": {
+                        "title": "name",
+                        "description": "name of the product",
+                        "example": "test"
+                    },
+                    "rating": {
+                        "title": "rating",
+                        "description": "rating of the product",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "description": {
+                        "title": "description",
+                        "description": "description of the product",
+                        "type": "string",
                         "example": "test"
                     },
                     "weight": {

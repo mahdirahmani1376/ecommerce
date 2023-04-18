@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Request;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -34,7 +33,7 @@ class Product extends Model implements HasMedia
 
     public function brand()
     {
-        return $this->belongsTo(Brand::class, 'product_id');
+        return $this->belongsTo(Brand::class, 'brand_id');
     }
 
     public function usersWishlist()
@@ -45,6 +44,7 @@ class Product extends Model implements HasMedia
     public function scopeFilter(Builder $query): Builder
     {
         $request = request();
+
         return Product::query()
             ->when($request->query('weight'), function (Builder $query, $weight) {
                 $query->where('weight', '<=', $weight);
