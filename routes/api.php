@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\AddressController;
-use App\Http\Controllers\Auth\ApiAuthController;
+use App\Http\Controllers\Auth\Api\AuthController;
+use App\Http\Controllers\Auth\Api\EmailVerificationController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
@@ -22,17 +23,24 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::controller(ApiAuthController::class)->group(function () {
-    Route::get('/user', 'show')->name('user.show');
+Route::controller(AuthController::class)->group(function () {
+    Route::get('/user', 'show')->name('users.show');
     Route::post('/tokens/create', 'createToken')->name('tokens.create');
-    Route::post('/user/login', 'login')->name('user.login');
-    Route::post('/user/logout', 'logout')->name('user.logout');
+    Route::post('/user/login', 'login')->name('users.login');
+    Route::post('/user/logout', 'logout')->name('users.logout');
+    Route::post('/user/register','register')->name('users.register');
 });
 
+Route::controller(EmailVerificationController::class)->group(function () {
+   Route::get('/email/verify','notice')->name('verification.notice');
+   Route::get('/email/verify/{id}/{hash}','verify')->name('verification.verify')->middleware(['auth:sanctum']);
+   Route::post('email/verification-notification','resendEmail')->name('verification.resendEmail')->middleware(['auth:sanctum','throttle:6,1']);
+});
 Route::middleware('auth:sanctum')->group(function () {
 Route::controller(UserController::class)->prefix('/users')->group(function () {
     Route::get('/wishlist')->name('users.wishlist');
 });
+
 Route::controller(ProductController::class)->prefix('/products')->group(function () {
     Route::get('/', 'index')->name('products.index');
     Route::get('/{product}', 'view')->name('products.view');

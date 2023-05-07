@@ -116,7 +116,20 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/products/{product}",
+     *     description="delete product request",
+     *     summary="delete product",
+     *     tags={"Products"},
+     *     operationId="destroy",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="product",required=false,in="path",description="product id of product",
+     *          @OA\Schema(type="integer",example="1")),
+     *      @OA\Response(response=200,description="Successful operation",),
+     *      @OA\Response(response=401,description="Unauthenticated",),
+     *      @OA\Response(response=403,description="Forbidden")
+     *     )
+     * )
      */
     public function destroy(Product $product)
     {

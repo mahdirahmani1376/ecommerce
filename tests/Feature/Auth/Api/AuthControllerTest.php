@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Auth\Api;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -8,7 +8,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
-class ApiAuthControllerTest extends TestCase
+class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -37,7 +37,7 @@ class ApiAuthControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_user_recieve_token()
+    public function can_user_receive_token()
     {
         $response = $this->actingAs($this->superAdmin)->postJson(route('tokens.create'));
 
